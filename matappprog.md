@@ -1284,6 +1284,5 @@ The following is a complete example of how to create a PNG file, which can be do
 > dev.off()
 ```
 
-![Image of ](https://octodex.github.com/images/yaktocat.png)
-
+![Image of ](https://github.com/VPAC/matappprog/blob/master/chapter01/MaungaWhau.png)
 
