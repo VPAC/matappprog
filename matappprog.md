@@ -1286,3 +1286,840 @@ The following is a complete example of how to create a PNG file, which can be do
 
 ![Image of ](https://github.com/VPAC/matappprog/blob/master/chapter01/MaungaWhau.png)
 
+
+# Numerical Computations with Octave
+
+## About Octave and Setup
+
+GNU Octave is a free and open source high-level software language for linear and non-linear numerical computations that is mostly compatiable with the commercial product MATLAB. An Octave program will usually run without modification on MATLAB, although the reverse is slightly less the case, as MATLAB has a larger collection of specialised and propertairy libraries. 
+
+Octave provides an  interactive command line interface and may also be used as a batch-oriented language for data processing. It is written in C++ and can be used with GNU Plot or Grace for plotting.
+
+The origins of Ocatave date back to 1988 when it was intended to be a companion to a chemical reactor course. Serious development was initiated by John W. Eaton in 1992, with an alpha release in 1993 and version 1.0 was released in 1994. Version 3.0 was released in late 2007. Ocatve is named after Octave Levenspiel, emeritus professor of chemical engineering at Oregon State University who taught Eaton.
+
+On high performance clusters with environment modules enables, different versions of octave may be available. These can be invoked and illustrated by logging on to such an HPC system as follows:
+
+```
+bash-4.2$ ssh train12@trifid.in.vpac.org
+[train12@trifid ~]$ qsub -l walltime=12:00:0,nodes=1:ppn=2 -I
+[train12@trifid-35 ~]$ module avail octave
+--------------------- /usr/local/Modules/modulefiles octave/3.6.3(default)
+[train12@trifid035 ~]$ module avail gnuplot
+----------- /usr/local/Modules/modulefiles 
+gnuplot/4.6.1(default)
+[train12@trifid035 ~]$ module load octave gnuplot
+```
+
+The submission of an interactive job to a cluster node is always preferred to running jobs on the login node, even low-intensity jobs such as interactive Octave.
+
+For each of these applications only the most recent version has been installed on the cluster and they have been set as the default for that application. As a result the environment paths can be added without defining their version numbers.
+
+Once loaded Ocatave can be started by simply typing 'octave', which awaits commands for interpretation. To see the range of options on launch use 'octave --help' or just 'octave -h'. To interrupt Octave, Cntrl-C will return the user to the Octave prompt. To exit Octave use ''quit' or 
+'exit' at the prompt. If an optional integer status is provided, that value is passed to the operating system as Octave’s exit status.
+
+```
+[train12@trifid035 ~]$ octave
+GNU Octave, version 3.6.3 
+…
+warning: X11 DISPLAY environment variable not set
+octave:1>
+```
+
+## Help, Editing, and Errors
+
+The command "doc" in Octave will provide an extensive manual.  If this is not installed it can be accessed through the URL: `http://www.gnu.org/software/octave/doc/interpreter/Getting-Help.html`. If the documentation is installed, the command `doc` followed by the function name will provide information concenrning that function, whereas `lookfor` followed by the function name will conduct a search for the the term.
+
+In addition to this there is documentation for various functions and variables via the help command, followed by the name of the individual command or function. The request help --list  will provide a full list of the operators, keywords, bult-in and loadable functions available.
+
+Editing the Octave command line is typically simply a case of entering text with the cursor advancing appropriately. However Octave uses the GNU Readline library which comes with various features worthy of note as follows:
+
+| Commands		| Effect				  	  |
+|:----------------------|:------------------------------------------------|
+| Cntrl-b, Cntrl-f 	| Move cursor back or forward one character	  |
+| Cntrl-a, Cntrl-e 	| Move cursor to the beginning or end of the line |
+| Esc+b, Esc+f 		| Move cursor back or forward on word		  |
+| Cntrl-l, clc(),home() | Clear the screen.				  |	
+| Cntrl-/, Esc+r 	| Undo last action, undo all actions on this line |
+| Cntrl-k 	 	| Clear ("kill") text from cursor to end of the line	  |
+| Esc+d 		| Clear ("kill") text to the end of the current word	  |
+| Cntrl-y 		| Paste ("yank") the most recently cleared text	  |
+| Esc+y 		| Rotate the kill-ring, and yank the new top.	  | 
+| Cntrl-t, Esc+t 	| Drag the character, or word, before the cursor forward over the character at the cursor, also moving the cursor forward |
+|Cntrl-v 		| Add the next character that you type to the line in raw mode; effectivey escapes the control characters |		
+| <tab> 		| Tab completion				  |
+| Cntrl-p, Cntrl-n 	| Move up and down through the history list.	  |
+| Esc+<, Esc+> 		| Move to first and last line of history	  |
+| Cntrl-R, Cntrl-S 	| Search backward and forward through history list|
+
+
+As with many other languages, comments in Octave are prefixed with the # or % symbol on a single line. Blocks of code can be commented by enclosing the code between matching ‘#{’ and ‘#}’ or ‘%{’ and ‘%}’ markers. 
+
+Octave reports two kinds of errors for invalid programs.  A parse error occurs if Octave cannot understand something a user has typed. For example, if a mispelled keyword;
+
+`octave:1> functon y = f (x) y = x^2; endfunction`
+
+Octave will respond immediately with a message like this: 
+
+`parse error:`
+`  functon y = f (x) y = x^2; endfunction`
+`          ^`
+
+For most parse errors, Octave uses a caret (‘^’) to mark the point on the line where it was unable to make sense of your input. In this case, Octave generated an error message because the keyword function was misspelled. Instead of seeing `function f`, Octave saw two consecutive variable names, which is invalid in this context. It marked the error at y because the first name by itself was accepted as valid input. 
+
+Another class of error message occurs at evaluation time. These errors are called run-time errors, or sometimes evaluation errors because they occur when the user's program is being run, or evaluated. For example, if after correcting the mistake in the previous function definition, the user typed;
+
+`octave:3> f ()`
+Octave will respond with 
+`error: `x' undefined near line 1 column 24`
+`error: evaluating expression near line 1, column 24`
+`error: evaluating assignment expression near line 1, column 22`
+`error: called from `f'`
+
+This error message has several parts, and gives you quite a bit of information to help the user locate the source of the error. The messages are generated from the point of the innermost error, and provide a traceback of enclosing expressions and function calls. 
+
+## Data and Argumentation Types
+
+Octave includes a number of built-in data types, including real and complex scalars and matrices, character strings, a data structure type, and an array that can contain all data types. A numeric constant may be a scalar, a vector, or a matrix, and it may contain complex values. A scalar is a single number that can be an integer, a decimal fraction, a number in scientific notation, or a complex number. By default numeric constants are represented within Octave in double-precision floating point format. A string constant consists of a sequence of characters, of any length, enclosed in either double-quote or single-quote marks. However, as the single quotation mark is also used as the transpose operator most Ocatve users consider the double quotation marks to be preferable.
+
+Octave includes support for two different mechanisms to contain arbitrary data types in the same variable. These are (i) Structures which are indexed with named fields, and (ii) cell arrays, where each element of the array can have a different data type and or shape. A structure contains elements, and the elements can be of any type. Structures may be copied and structure elements themselves may contain structures (which can contain structures and so forth). However Octave will not display to standard output all levels of a nested structure. In contrast, with a cell array several variables of different size and value can be stored in one variable. Cells are indexed by the { and } operators and can be inserted, retrieved, or changed from from this index.
+
+```
+octave:1> x.a = 1; 
+octave:2> x.b = [1, 2; 3, 4]; 
+octave:3> x.c = "string"; 
+octave:4> x 
+(snip)
+octave:5:> y = {"a string", rand(2, 2)};
+octave:5:> y{1:2}
+(snip)
+octave:6:> y{3} = 3;
+(snip)
+```
+
+The final data container of note deserves special mention as it is so common as both an input and an output argument type; comma-separated lists. Elements of a cell array can be extracted into a comma separated list with the { and } operators and using [ and ], elements can be concatenated into an array. 
+
+```
+octave:7:> z{3} = 3;
+octave:8> a = {1, [2, 3], 4, 5, 6}; 
+octave:9> b = [a{1:4}] 
+(snip)
+```
+
+## Numerical Data Types
+
+Numerical data types in Octave may be a scalar, vector, or matrix, and may contain complex values. By default numeric constants are in double-precision floating-point format, with complex constants as pairs of double-precision floating point values. Various functions can conduct conversions between numeric data types, such as double(x) which will convert x to a double precision type. Likewise the function single(x) will convert x to a single precision type. Most of the functions in Octave accept single precision values and return single precision answers. 
+
+Octave also supports integer matrices, both signed and unsigned represented by 8, 16, 32, or 64 bits. Most computations however require floating point calculations. Integers are most commonly used to store data, rather calculations. Consider the following randomnly generated matrix.
+
+```
+octave:26> float = rand (2, 2)
+(snip)
+octave:27> integer = int32 (float)
+(snip)
+```
+
+In Octave, the size of a matrix is determined automatically. but it is up to the user to ensure that the rows and columns match.
+
+```
+octave:1> octa = [1, 2; 3, 4]
+(snip)
+octave:2> [octa, octa ]
+octave:3>  [octa, 1 ]
+error: horizontal dimensions mismatch (2x2 vs 1x1)
+```
+
+Whitespace is important - sometimes. For example, where there is no ambiguity in meaning Octave will simply consider whitespace as unimportant. However there is possibility that the whitespace could be interepreted as part of a calculation and the lack of whitespace as a value.
+
+```
+octave:3>  octa = [ 1 2
+>            3 4 ]
+(snip)
+octave:4> [ 1 - 1 ]
+ans = 0
+octave:5>   [ 1 -1 ]
+(snip)
+```
+
+Because the single quote character (') is used as both a transpose character and for quotating strings, this is another potential source of confusion.
+
+```
+octave:15> var = 1
+var =  1
+octave:16> [ 1 var' ]
+(snip)
+octave:17> [ 1 var ' ]
+(snip)
+octave:17> [ a 'var' ]
+ans = var
+```
+
+## Strings
+
+A string in Octave is an array of characters. Internally the string "ddddd" is actually a row vector of length 5 containing the value 100 in all places (because 100 is the ASCII code of "d"). Using a matrix of characters, it is possible to represent a collection of same-length strings in one variable. The convention used in Octave is that each row in a character matrix is a separate string, but letting each column represent a string is equally possible.
+
+The escape sequences in Octave are the same used in the C programming language, so users familiar with both will readily adapt. In double-quoted strings, the backslash character is used to introduce escape sequences that represent other characters.  In single-quoted strings however, the backslash is not a special character.  Consider the application of the toascii() function which converts a value to ASCII in a matrix.
+
+```
+octave:17> toascii ("\n") 
+ans =  10 
+octave:18> toascii ('\n') 
+ans = 
+   92   110 
+```
+
+The following is a table of all the escape sequences.
+
+| Escape Cod	| Result					|
+|:--------------|:----------------------------------------------|
+| \\ 		| A literal backslash, ‘\’			|	
+| \" 		| A literal double-quote character, ‘"’		|
+| \' 		| A literal single-quote character, ‘'’		|
+| \0 		| The “nul” character, control-@, ASCII code 0	|
+| \a 		| The “alert” character, control-g, ASCII code 7|
+| \b 		| A backspace, control-h, ASCII code 8		|
+| \f 		| A formfeed, control-l, ASCII code 12		|
+| \n 		| A newline, control-j, ASCII code 10		|
+| \r 		| A carriage return, control-m, ASCII code 13	|
+| \t 		| A horizontal tab, control-i, ASCII code 9	|
+| \v 		| A vertical tab, control-k, ASCII code 11	|
+
+With a single-quoted string there is only one escape sequence: two single quote characters in succession with generate a literal single quote.
+
+The easiest way to create a character matrix is to put several strings together into a matrix.
+
+`charmat = [ "String #1" " String #2" ; "String #3" " String #4" ];`
+
+If a character matrix is created from strings of different length (as in the above example)Octave puts blank characters at the end of strings shorter than the longest string. It isn't possible to represent strings of different lengths, although it is possible to have a cell array of strings. 
+                 
+Since a string is a character array, comparisons between strings work element by element. The strcmp(s1,s2) function will compare complete strings with case sensitivity. In comparison strncmp(s1,s2,N) compares only the first N characters. Case-insentive functions which are equivalent are strcmpi and strncmpi. As a search function, of sorts, validatestring(str,strarray) will validate the existence of a case insenstive string with the strotest match. 
+                 
+```octave:24> validatestring ("RED", {"redrum","red", "green", "blue", "black", "reddish"})
+ans = red```
+           
+There is a variety of functions for string manipulation and conversions. Because a string is just a matrix standard operators can be used for a variety of changes.
+
+e.g., search and replace
+
+```octave:44> quote="The quick brown fox jumps over the lazy dog"
+quote = The quick brown fox jumps over the lazy dog
+octave:45> quote(quote==" ") = "_"
+quote = The_quick_brown_fox_jumps_over_the_lazy_dog```
+
+Other functions like deblank(s) removes trailing whitespaces s, strtrim(s) removes leading and trailing whitespace, strtrunc (s, n) will truncate the string s to length n. Useful conversion functions include bin2dec(s), which will convert binary to decimal or dec2bin(s) which conducts the reverse. A more elaborate version is dec2base(s,base) which will convert a string of digits in a variable base to a decimal integer, and  dec2base(d,base) which will do the reverse. The function str2double(s) will convert a string to a real or complex number.
+
+## Simple Matrix Mathematics
+ 
+Like the text "MATLAB 7 Getting Started Guide" (Mathworks, 2008), this guide will illustrate the features Octave using Albrecht Dürer's magic square found in detail of the print Melencolia I. This print itself has been subject to more interpetation than almost any other uin history (indeed a two-volume study was written on it). The order-4 magic square itself was noted in other cultures, but is believed to be the first time illustrated in Europen art.
+
+To enter Dürer into Octave as a variable and matrix simply enter the following on the Octave command line. The entries represent rows in the matrix with individual values seperated with a comma and each end of row separted with a semi-colon. Note that without the semi-colons, the result would be a simple row vector. With semi-colons after each element it would be a column vector.
+
+In this case however Octave helpfully responds with the entries as a matrix. To prevent this behaviour and just store the variable add a semicolon at the end.
+
+```
+octave:1> A = [16 3 2 13; 5 10 11 8; 9 6 7 12; 4 15 14 1]
+A =
+   16    3    2   13
+    5   10   11    8
+    9    6    7   12
+    4   15   14    1
+octave:2> A = [16 3 2 13; 5 10 11 8; 9 6 7 12; 4 15 14 1];
+```
+
+As with other magic squares in recreational mathematics, Dürer's has a number of features which are useful for illustrating some of the core features iof Octave. The function sum(A) for example with give the results of the sum of the columns. The column vector of the row sums can be achieved by transposing the the matrix. The apostrophe operator (e.g., A') conducts a conjugate transposition (A.' would just transpose), changing the row vectors in to column vectors, thus sum(A') producing the sum of the transpositions, and sum(A')' producing a column vector of the row sums, and sum(diag(A)) providing the sum of the main diagonal (top-left to bottom-right). The sum the bottom-left to top-right can be calculated by flipping the matrix left to right, i.e., sum(diag)(flip(A)).
+
+```
+octave:3> sum(A)
+(snip)
+octave:4> sum(A')
+(snip)
+octave:5> sum(A')'
+(snip)
+octave:6> sum(diag(A))
+(snip)
+octave:7> sum(diag(fliplr(A)))
+(snip)
+```
+
+## Variables and Operations
+
+Octave can store data in variables. Sometimes these can be very simple, like a one-by-one matrix. Variables must begin with a letter or a underscore and can be followed by letters, numbers, or underscores. However, variables that begin and end with two underscores are reserved for internal use by Octave; as a result it is usually best just to start with a letter. Variables are also case-sensitive. The maximum length for a variable can be determined by invoking the function namelengthmax (63 on trifid.vpac.org), although why one would want a variable that long is moot. Note that the built-in variable ans will always contain the result of the last computation.
+
+Numbers in Octave are expressed in standard decimal notation optional decimal and  positive or negative signs. Scientific notation uses the standard e to representa a power of 10 notation, and imaginary numbers use i or j as a suffix. Standard notion (+, -, *, /, ^) and precedence (functions, transpose, exponent., logical not., multiply and divide., addition and subtraction., logical and and logical or., assignment) rules apply. Less typical notatiuon includes "left division" (\) for linerar algebra, ' (complex conjugate transpose), power operations (**). 
+
+Simple arithematic, trigonomic, inverse trigonomic, natural and base 10 logarithms, and absolute values can be carried out with Octave with sin, cos, tan, asin, acos, and atan. For logorithms, use log or log10. For absolute values use abs. The following examples illustrate these functions:
+
+```
+octave:5> 6 / 2 * 3
+ans =  9
+octave:6> 6 / (2 * 3)
+ans =  1
+octave:7> A(1,4)+A(2,4)+A(3,4)+A(4,4)
+ans =  34
+octave:8> log10(100)/log10(10)
+ans =  2
+octave:9> sqrt(3^2 + 4^2)
+ans =  5
+octave:10> floor((1+tan(1.2)) / 1.2)
+ans =  2
+```
+
+Line 7, whilst a simple example in terms of arithmatic, illustrates matrix addition of subelements, being the addition of the elements (row 1, column 4) plus (row 2, column 4) plus (row 3, column 4), and (row 4, column 4).
+
+When there are two matrices of the same size, element by element operations can be performed on them. For example, the following divides each element of A by the corresponding element in B:
+
+```
+octave:11> A1 = [1, 6, 3; 2, 7, 4]
+(snip)
+octave:12> A2 = [2, 7, 2; 7, 3, 9]
+(snip)
+octave:13> A1 ./ A2
+(snip)
+```
+
+The dot divide (./) operator is used perform element by element division. There are similar operators for addition (.+), subtraction (.-), multiplication (.*) and exponentiation (.^). In addition Octave also has a syntax for left division (\), which is equivalent of inverse(x) * y, and element-by-element left division (.\), and transpose (.'). Note that when a potentially ambigious statement is made (e.g., 1./m) Octave by default treats the dot as part of the operator, rather than the constant i.e., (1)./m, rather than (1.)/m.
+
+Various constants are also pre-defined: pi, e (Euler's number), i and j (for the imaginary number sqrt(-1)), inf (Infinity), NaN (Not a Number - resulting from undefined operations, such as Inf/Inf). e.g.,
+
+```octave:14> e^(i*pi)
+ans = -1.0000e+00 + 1.2246e-16i```
+
+Octave also includes standard comparison operations, less than (<), less than or equal (<=), equal (==), equal or greater than (>=), greater than (>), and not equal (~=, !=). Boolean operator are also in use for "or" (|), and (&), and not (!). These can be applied on an element-by-element listing as well. 
+
+Increment operators increase (++) or decrease (--) the value of a variable by one. If the expression is on the left hand side of the variable (++x, --x) the value of the expression is the new value of the variable (equivalent to x = x +1 or x = x -1). If it is on the right-hand side (x++, x--), the value of the expression is the old value of x.
+
+Automatic generation of vectors with a consistent increment takes the form of Start[:Increment]:End 
+
+```
+octave:15> rv = [1:2:11]
+rv =
+    1    3    5    7    9   11
+octave:16> rv2 = [1:11]
+rv2 =
+    1    2    3    4    5    6    7    8    9   10   11
+```
+
+Note the use of the colon; this can vary in Octave. In the above case it acts as a delimiter for increments, or for an automatic inrementor. In subscript it can be used to refer to incremented portions of a matrix, for example the sum of the first four elements of column 4, or all the elements of column 4 (in this case that's the same).
+
+```
+octave:17> sum(A(1:4,4))
+ans =  34
+octave:18> sum(A(:,end))
+ans =  34
+```
+
+Stepping outside of the major square for a moment, Octave can also carry out set operations. There are different core set operations in octave basically Octave can use vector, cell arrays or matrix as its set input operation.
+
+Given two simple matricies, union, intersection, can be illustrated as follows:
+
+```
+octave:19> Aset=[1 2 3]
+..
+octave:19> Bset=[3 4 5]
+..
+octave:19> union(Aset,Bset)  
+ans =
+   1   2   3   4   5
+octave:26> intersect(Aset,Bset)
+ans =  3
+```
+
+The difference operation, also called as the a-b operation, returns those element of a that are not in b.
+
+```octave:27> setdiff(Aset,Bset)
+(snip)```
+
+The Octave function ismember compared and the those elements that are present in the second set are marked as true rest are marked as false.
+
+```octave:28> ismember(Aset,Bset)
+(snip)```
+
+Finally, the function setxor returns the elements exclusive to the sets listed in ascending order.
+
+```octave:29> setxor(Aset,Bset)
+(snip)```
+
+## Manipulating Matrices
+
+Matrix mathematics is the foundation of Octave. Unsurprisingly there are several ways that a matrix can be created. The function zeroes(a,b) will created matrix with zeroes assigned to all elements in cells across a,b rows and colums, the function ones(a,b) will do the same except with the value 1 assigned to the elements, rand(a,b) will do the same with uniformally distributed elements, randn(a,b) with normally distributed random elements. The range of random numbers can also have the fractional component truncuated leaving an integer. When added to a multiplier this provides a range. Martrices can, and typically are, assigned to a variable. For example to generate ten numbers from between 1 and 100;
+
+```
+octave:19> d100=fix(101*rand(1,10))
+d100 =
+   58   97   86   95   29   28   86   66   20   9
+```
+
+Remember that indicies begin with 0. 
+
+Matrices can be concatenated by adding existing matricies together or by providing a mathematic operation on them. For example, starting with the initial example, another set of rows and columns may be added. e.g.,
+
+```
+octave:20> A = [16 3 2 13; 5 10 11 8; 9 6 7 12; 4 15 14 1]
+(snip)
+octave:21> B = [A A+32; A+48 A+16]
+(snip)
+```
+
+The following is a list of some of the common functions for matrix manipulation available in Octave. 
+
+| Function	| Result					|
+|:--------------|:----------------------------------------------|
+| tril(A)	| Returns the lower triangular part of A	|
+| triu(A)	| Returns the upper triangular part of A	|
+| eye(n)  	| Returns the n\times n identity matrix. You can also use eye(m, n) to return m\times n rectangular identity matrices	|
+| ones(m, n)	| Returns an m\times n matrix filled with 1s. Similarly, ones(n) returns n\times n square matrix. |
+| zeros(m, n)	| Returns an m\times n matrix filled with 0s. Similarly, zeros(n) returns n\times n square matrix. |
+| rand(m, n)	| Returns an m\times n matrix filled with random elements drawn uniformly from [0, 1). Similarly, rand(n) returns n\times n square matrix.	|
+| randn(m, n)	| Returns an m\times n matrix filled with normally distributed random elements.	|
+| randperm(n)	| Returns a row vector containing a random permutation of the numbers 1, 2, \ldots, n.	|
+| diag(x) or diag(A).	| For a vector, x, this returns a square matrix with the elements of x on the diagonal and 0s everywhere else. For a matrix, A, this returns a vector containing the diagonal elements of A.	|
+
+## Indexing Matrices
+
+Index expressions in Octave permit the referencing or extracting selected elements of a matrix or vector. Indices can be scalars, vectors, ranges, or the special operator ‘:’, which can be used to select entire rows or columns, or elements in order of row then column. For example, given a simple matrix, the following basic selections can be easily established.
+
+```
+octave:22> z=[4 3 ; 2 1]
+(snip)
+octave:25> z(1,3)
+error: A(I,J): column index out of bounds; value 3 out of bound 2
+octave:26> z(2,1)
+ans =  2
+octave:27> z(2,2)
+ans =  1
+octave:28> z(1)
+ans =  4
+```
+
+Additional bracketing within the selection ([x, y]) provides column selections. All of the following expressions are equivalent and select the first row of the matrix. The colon operator (:) can be used to select all rows or columns from a matrix.
+
+```
+octave:29> z(1, [1, 2])  # row 1, columns 1 and 2
+octave:30> z(1, 1:2)     # row 1, columns in range 1-2
+octave:31> z(1, :)       # row 1, all columns
+```
+
+A range of rows or columns can also be selected from a matrix in the general form of: start:step:stop
+
+The first number in the range is start, the second is start+step, the third, start+2*step, etc. The last number is less than or equal to stop.
+
+Rows and columns can be deleted from an Octave matrix using square brackets [] to represent null. Applying this to specific rows and columns can be achieved by using the colon as a separator between rows and columns, and the comma to distinguish particular colums. For example to remove column 3 then row 1.
+
+```
+octave:32> X=A
+(snip)
+octave:33> X(:,3)=[]
+(snip)
+octave:34> X(1,:)=[]
+(snip)
+```
+
+A single element cannot be deleted from a matrix (e.g., X(1,2)=[]), because that would mean it is no longer a matrix! 
+
+Finally, there is the keyword `end` that can be used when indexing into a matrix or vector. It refers to the last element in the row or column (e.g., x(end-2:end)).
+
+## Polynomials
+
+A polynomial expressions in Octave is represented by its coefficients in descending order. Consider the vector expression p:
+
+`octave:31> p = [-2, -1, 0, 1, 2];`
+
+The polynominal itself can be displayed by using the function output polyout, which displays the the polynominal in the variable specified (e.g., 'x'). The function polyval returns p(x), depending on the value assigned to x. If x is a vector or matrix, the polynomial is evaluated at each of the elements of x.
+
+```
+octave:31> polyout(p, 'x')
+-2*x^4 - 1*x^3 + 0*x^2 + 1*x^1 + 2
+octave:34> y=polyval(p, 5)
+y = -1368
+```
+
+Polynominal multiplication is carried out by vector convolutions. This can be determined by r=conv(p,q). The two variables, p and q, are vectors containing the coefficients of two polynominals, and the result r contains the coefficients of their product.
+
+```
+octave:31> q = [1, 1];
+octave:37> r = conv(p, q)
+(snip)
+```
+
+Division is represented by deconvolving two vectors such that where [b, r] = deconv (y, a) solves for b and r such that y = conv (a, b) + r . If y and a are polynomial coefficient vectors, b will contain the  coefficients of the polynomial quotient and R will be a remainder
+polynomial of lowest order.
+
+Addition of polynomials in Octave has the issue that they are represented by vectors of their coefficients. As a result, addition of vectors of different lengths will fail. For example, for the polynominals  p(x) = x^2 - 1 and q(x) = x + 1, addition will fail. To work around this, you have to add some leading zeroes to q, which does not change the polynomial.
+
+```
+octave:38> p = [1, 0, -1];
+octave:39> q = [1, 1];
+octave:40> p + q
+error: operator +: nonconformant arguments (op1 is 1x3, op2 is 1x2)
+error: evaluating binary operator `+' near line 22, column 3
+octave:41> q = [0, 1, 1];
+octave:42> p + q
+(snip)
+octave:43> polyout(ans, 'x')
+1*x^2 + 1*x^1 + 0
+```
+
+Other simple functions include: 
+
+roots(p), which returns a vector of all the roots of the polynomial with coefficients in p. The derivatives function; q = polyderiv(p), returns the coefficients of the derivative of the polynominal whose coefficients are given by the vector p. 
+
+q = polyint(p), which returns the coefficients of the integral of the polynomial whose coefficients are represented by the vector p. The constant of integration is set to 0.
+
+p = polyfit(x, y, n), which returns the coefficients of a polynomial p(x) of degree n that best fits the data (x_i, y_i) in the least squares sense. 
+		
+### Linear Algebra and Eigenvalues
+
+The simple arithematic, set theories, and polynominals explored so far serves as an introduction to more serious mathematics concerning vector spaces in linear algebra. Octave has a number of functions which aid this research which can be elaborated. For example;
+
+`A = octave:44> A = [16 3 2 13; 5 10 11 8; 9 6 7 12; 4 15 14 1];`
+
+The function det computes the determinant, the value associated with a square matrix. For example;
+
+```octave:45> det(A)
+ans =  1.0871e-12```
+
+The function lambda = eig(A) returns the eigenvalues for A in the lector lambda, and
+[V, lambda] = eig(A) returns the eigenvectors in V but lambda is a now matrix whose diagonals contain the eigenvalues.  This relationship holds true A = V*lambda*inv(V).
+
+```
+octave:46> lambda = eig(A)
+(snip)
+octave:47> [V, lambda] = eig(A)
+(snip)
+octave:48> A1 = V*lambda*inv(V)
+(snip)
+```
+
+In linear algebra an n-by-n (square) matrix A is called invertible (nonsingular or nondegenerate) if there exists an n-by-n matrix B such that AB = BA = In  
+
+Where In denotes the n-by-n identity matrix and the multiplication used is ordinary matrix multiplication. If this is the case, then the matrix B is uniquely determined by A and is called the inverse of A, denoted by A−1. 
+
+A square matrix that is not invertible is called singular or degenerate. A square matrix is singular if and only if its determinant is 0. Octave will give an error if inversion is attemopted on a non-square matrix. Matrix inversion is the process of finding the matrix B that satisfies the prior equation for a given invertible matrix A.    
+
+Note that in theory A*inv(A) should return the identity matrix, but in practice, there may be some round off errors so the result may not be exact.
+
+```octave:49> inv(A)
+(snip)```
+  
+In this example, rcond stands for reciprocal condition estimate. The rank of a matrix is a measure of the "nondegenerateness" of the system of linear equations and linear transformation encoded by that matrix. The command rank(A) will compute the rank of A using singular value decomposition. The rank is taken to be the number of singular values of A that are greater than the specified tolerance TOL.  If the second argument is omitted, it is taken to be tol = max (size (A)) * sigma(1) * eps, where eps is machine precision and sigma(1) is the largest singular value of A.
+
+```octave:50> rank(A)
+ans =  3```
+
+The eigenvalues of A produce the following:
+
+```octave:51> e=eig(A)
+(snip)```
+
+Note that calculating the inverse is often 'not' necessary. See the next two operators as examples. Note that in theory A*inv(A) should return the identity matrix, but in practice, there may be some round off errors so the result may not be exact.
+
+The largest eigenvalue is 34, the vector of all ones is an eigenvector.
+
+```octave:52> v = ones(4,1)
+(snip)```
+
+Unsurprisingly;
+
+```octave:53> A*v
+(snip)```
+ 
+The length of a vector x = (x1, x2, ... xn) in the n-dimensional real vector space R^n is usually calculated in Euclidean distance. This is famously inappropriate for taxi drivers in Manhattan, who calculate distance according the orthogonal or parallel lines. The class of p-norms is calculated as follows:   
+
+```octave:54> norm(A)
+ans =  34.000```
+
+The command norm(A, p) computes the p-norm of the matrix (or vector) A. The second argument is optional with default value of p=2; the command "help norm" will give a variety of other options.
+  
+There is a small mountain of other built-in functions that Octave has available for linear algebra. The following is a small subset, which can be accessed in some detail from Octave by "help command". 
+
+| Command	| Function				|
+|:--------------|:--------------------------------------|
+| balance	| eigenvalue balancing			|
+| cond		| condition number			|
+| dmult		| computes diag(x) * A efficiently	|
+| dot		| dot product				|
+| givens	| Givens rotation			|
+| expm(A)	| computes the matrix exponential of a square matrix	|
+| kron		| Kronecker product			|
+| krylov	| Orthogonal basis of block Krylov subspace	|
+| housh		| Householder reflections		|
+| logm(A)	| computes the matrix logarithm of a square matrix	|
+| null		| orthonormal basis of the null space	|
+| orth		| orthonormal basis of the range space	|
+| pinv		| pseudoinverse				|
+| svd		| singular value decomposition		|
+| sqrtm(A)	| computes the matrix square root of a square matrix	|
+| syl		| solves the Sylvester equation		|
+| trace(A)	| computes the trace (sum of the diagonal elements) of A	|
+
+
+## Functions
+
+The simple structure of a function in Octave is simply a function declation, name, body, and end of function declaration. The name of the function follows the same rules as a variable. The body will define what the function actually does. Normally, this will require an argument message to be parsed to the function after the name which is invoked from the function. If information is wanted from the function, as it is from most cases, the ret-var (return variable) is added. Multiple return values take the form of a bracketed list. There are also special parameters for variable length input argments (varargin) and return lists (varargout). As with other programming languages it is often considered good practise to assign default values to some input arguments.
+
+function [ret-list] = name(arg1= val1, arg2 = val2 ...)
+	body
+endfunction
+
+The following example of a function returns two values, the maximum element of a vector and the index where it first occurs.
+
+```
+     function [max, idx] = vmax (v)
+       idx = 1;
+       max = v (idx);
+       for i = 2:length (v)
+         if (v (i) > max)
+           max = v (i);
+           idx = i;
+         endif
+       endfor
+     endfunction
+```
+
+As with blocks in other languages, a return statement can exit the function and return to the main program. Values must be assigned to the list of the return variables that are part of the function. This example function checks to see if any elements of a vector are nonzero:
+
+```
+     function retval = any_nonzero (v)
+       retval = 0;
+       for i = 1:length (v)
+         if (v (i) != 0)
+           retval = 1;
+           return;
+         endif
+       endfor
+       printf ("no nonzero elements found\n");
+     endfunction
+```
+
+Normally an Octave user will want to save the functions that they written for later use. Such files, with a .m suffix, can be simply included in an invoked path from the Octave interpreter. When a function is called, Octave searches the current working directory and the Ocatve installation directory for the function. The path command will display this directory listing. New paths can be included with the addpath() function, the genpath() function for directories and subdirectories, and rmpath() to remove paths.
+
+```
+octave:12> path 
+Octave's search path contains the following directories: 
+(snip)
+octave:14> addpath("~/mathsprog/octave") 
+octave:12> path 
+(path)
+```
+
+A function file may include functions in its own right, as subfunctions. An alternative is a function that calls another function in the path, or private functions. The advantage of the latter is that it is accessible by any number of functions, whereas a a subfunction is contained within the main function. Such private functions often take the role of "helper functions" carrying out generic tasks. With such variation there also needs to be some precedence within functions – it is possible that multiple versions of a function may be defined within a particular scope. Precedence is then assigned to subfunctions, private functions, command-line functions, autoload functions, and finally built-in functions.
+
+Functions can also have function handles, effectively a pointer to another function. The general syntax is simply; handle = @function. As a similar variation, functions can also be anonymous using the syntax; handle = @(argumentlist) expression. A function can also be created from a string with the inline function.
+
+```
+octave:1> f = @sin; 
+octave:2> quad (f, 0, pi) 
+ans =  2 
+octave:13> f = inline("x^2 + 2"); 
+octave:14> f(6) 
+ans =  38 
+```
+
+Because Octave is a programming and scripting language it is possible to turn octave scripts into commands that can be invoked from the command line rather than using the interpreter. This is conducted in a very similar manner to the scripting commands for shell scripts or even PBS. This is very useful for batch processing of data files. An algorithm that has been tested successfully in an interactive Octave session can then be saved as a script and executed  independently (although, please don't do so on the login node).
+
+Unlike a function file, a script must not begin with the function keyword – although it is possible to work around this by calling a statement that has no effect (e.g.. 1;). Further, the variable named within are not local, but are of the same scope of any other variable from the command line.
+
+The first line of an Octave script, following the standard '#!' prefix, will to provide the path to the particular Octave binary.  This can vary according to which version of Octave one wishes to use e.g.,
+
+`#! /usr/local/octave/3.6.3/bin/octave -qf`
+
+The -qf is a standard option when launching Octave not to include any initialisation files and not to print start-up messages. The file can be executed either by modifying its permissions to make it executable or by invoking 'octave filename'. There is also the built-in function source(file).
+
+It is useful to be able to save Octave commands and rerun them later on.  These should should be saved with a .m extension. To run an existing script in Octave, the path needs to be specified unless the environment is in the  same directory as the script file.  For example, if I have a script called myscript.m in an octave directory, the following two commands will execute the script.
+
+``octave55>chdir('~/mathsprog/octave'); % This changes to the octave directory
+octave56>myscript;``
+
+
+## Global Variables, Conditions, and Loops
+
+A variable may be declared and initialised as global, meaning that it can be accessed from within a function body without having to pass it as a formal parameter. It is, however, necessary declare a variable as global within a function body in order to access it.
+
+```
+global g
+function f ()
+  g = 1; # does NOT set the value of the global variable g to 1.
+  global g = 1; # This will however
+endfunction
+f ()
+```
+
+As with other programming languages, Ocatve provides the faciility for instructions that conditional branching and loops. These include the if statement, the switch statement, the while statement, the do-until statement, the for statement, the break and continue statements.
+
+The if statement statement takes the basic form of : if (condition) then-body endif. The if statement can have additional branching with else; if (condition) then-body else else-body endif, and even more branching with elseif. The following is a fairly simple example:
+
+```
+d100=fix(101*rand(1))
+if (rem (d100, 2) == 0)
+	printf ("d100 is even\n");
+elseif (rem (d100, 3) == 0)
+	printf ("d100 is odd and divisible by 3\n");
+else
+	printf ("d100 is odd\n");
+endif
+```
+
+Elaborate if-elseif-else statement can however become unwieldly. As a result, Octave offers the switch statement as an alternative with the basic structure of switch(expression) case condition (body) case condition (body) case condition (body) … otherwise (body) endswitch. Note that, unlike in C for example, case statements in Octave are exclusive and command bodies are not optional.
+
+```
+d100=fix(101*rand(1))
+switch d100
+	case (rem (d100, 2) == 0)
+		printf ("d100 is even\n");
+	case (rem (d100, 3) == 0)
+		printf ("d100 is odd and divisible by 3\n");
+	otherwise
+		printf ("d100 is odd\n");
+endswitch			
+```
+
+The while statement is the simplest sort of loop. It repeats a statement as long as an initial condition remains true. The general structure is: while (condition) body endwhile. If the condition is true, the body is executed. Then the condition is tested again. The following example uses the while statement for the first ten elements of the Fibonacci sequence in the variable fib.
+
+```
+fib = ones (1, 10);
+	i = 3;
+while (i <= 10)
+	fib (i) = fib (i-1) + fib (i-2);
+	i++;
+endwhile
+fib
+(snip)
+```
+
+A variation is the do-until statement with the main difference is the conditional test occurs after an  initial execution of the body. The general structure is: do body until (condition). The Fibonacci sequence is illustrated again:
+
+```
+fib = ones (1, 10);
+i = 2;
+do
+	i++;
+	fib (i) = fib (i-1) + fib (i-2);
+until (i == 10)
+fib
+```
+
+The basic structure of an Octave for loop is; for (var = expression) (body) endfor. The assignment expression assigns each column of the expression to var in turn. If expression is a range, a row vector, or a scalar, the value of var will be a scalar each time the loop body is executed. If var is a column vector or a matrix, var will be a column vector each time the loop body is executed.  Again, using the Fibonacci sequence:
+
+```
+fib = ones (1, 10);
+for i = 3:10
+	fib (i) = fib (i-1) + fib (i-2);
+endfor
+```
+
+Within Octave is it also possible to iterate over matrices or cell arrays using the for statement. 
+
+```
+# Matrix loop
+for i = [1,3;2,4]
+	i
+endfor
+(snip)
+# Cell array loop
+for i = {1,"two";"three",4}
+	 i
+endfor
+(snip)
+```
+
+Loops can be escaped with the break statement, which exits the innermost loop that encloses it. Naturally enough, it can only be used within the body of a loop. The following example finds the smallest divisor of a given integer, and identifies prime numbers. It uses a break statement to escape the first while statement when the remainder equals zero, proceeding immediately to the next statement following the loop.
+
+```
+num = 103;
+div = 2;
+while (div*div <= num)
+  if (rem (num, div) == 0)
+    break;
+  endif
+  div++;
+endwhile
+if (rem (num, div) == 0)
+  printf ("Smallest divisor of %d is %d\n", num, div)
+  else
+  printf ("%d is prime\n", num);
+endif
+```
+
+The continue statement is also used only inside loops. Where a condition is met, it skips over the rest of the loop body, causing the next cycle around the loop to begin immediately. In the following example, if one of the elements of vec is an odd number, this example skips the print statement for that element, and continues back to the first statement in the loop.
+
+```
+vec = round (rand (1, 10) * 100);
+for x = vec
+  if (rem (x, 2) != 0)
+    continue;
+  endif
+    printf ("%d\n", x);
+endfor
+```
+
+## Graphics
+
+Octave provides plotting capability through GNUplot or OpenGL, with the latter being a newer addition. The function call graphics_toolkit ("fltk") selects the FLTK/OpenGL system, and graphics_toolkit ("gnuplot") selects the gnuplot system. For the following graphics examples the local machine should be used for testing purposes rather than the cluster.
+
+The plot() function is the workhorse in Octave for plotting. A simple two-dimensional plot can be built by assigning values for the x and y axes, properties and values – all of which except for the y coordinates are optional. Log axes can be built using the loglog(), semilogx(), and semilogy() functions. The functions bar(), barh(), stair(), stem(), scatter() and others provide the ability to effectively display discrete data as a bar graph, a horizontal bar graph, a stairstep plot, a stem graph, a scatter plot etc.
+
+Similarly, the axis() function may be used to change the axis limits of an existing plot, the aspect ratio, and colour, functional plots with fplot(), ezplot(), and ezpolar(), and various mesh() and plot3() functions for three-dimension plots. Walking through the followinge examples from the GNU Octave book illustrates these functions in action. Note that will all of these examples they can run on the cluster with the gnuplot module loaded, which does a fairly good job for a two-dimensional black-and-white, text-based display. 
+
+```
+x = -10:0.1:10;
+plot (x, sin (x));
+hist (randn (10000, 1), 30);
+h = bar (rand (5, 10));
+set (h(1), "basevalue", 0.5);
+x = 1:10;
+y = 2*x;
+stem (x, y, "r");
+theta = 0:0.2:6;
+stem3 (cos (theta), sin (theta), theta)
+fplot (@sin, [-10, 10], 201);
+ezplot (@(x, y) x.^2 - y.^2 - 1)
+f = @(x,y) sqrt (abs (x .* y)) ./ (1 + x.^2 + y.^2);
+ezcontour (f, [-3, 3]);
+ezpolar (@(t) 1 + sin (t));
+tx = ty = linspace (-8, 8, 41)';
+[xx, yy] = meshgrid (tx, ty);
+r = sqrt (xx .^ 2 + yy .^ 2) + eps;
+tz = sin (r) ./ r;
+mesh (tx, ty, tz);
+z = [0:0.05:5];
+plot3 (cos (2*pi*z), sin (2*pi*z), z, ";helix;");
+plot3 (z, exp (2i*pi*z), ";complex sinusoid;");
+```
+
+Finally, the print() function allows the computational side of Octave to run, but the graphics exported to a file. The examples of mandelbrot.m and sierpinski.m in the Octave directory should be reviewed, run, and the output file copied to a local directory for visualisation. 
+
+
+# Octave and MATLAB(R)
+
+Much of the syntax and behaviour of Octave is similar to MATLAB(R). The core principles - such as the use of matrices as a basic data type, support for complex numbers, extension via functions - are common to both. Nevertheless, whilst Octave is very similar to MATLAB(R) it is not quite the same.
+
+To begin with, the GNU Octave parser is more advanced than that of MATLAB's. Octave supports single and double quotes, whereas MATLAB only supposrts single. Octave supports C-style autoincrement and assignment operators such as i++; ++i; i+=1, whereas MATLAB does not. Unlike Octave, MATLAB does not extend character strings of different lengths in a matrix, instead it will produce and error. Matlab doesn't support `printf` as a command for printing to the standard output. MATLAB always requires "..." for line continuation whereas Octave will support a carriage return or backslash. MATLAB always requires the ~= syntax to represent the logical operator NOT, whereas Octave will accept both ~= and !=, the latter more familiar from those from other programming languages. 
+
+MATLAB will execute a startup.m in the directory it was called from; Octave does not, but it does execute a .octaverc - which can include a startup.m file. Octave's version of the nargin() function (number of function input arguments) behaves differently in terms of assignment, and MATLAB's product of array elements function, prod() is only supported for floating point input. MATLAB lets you load empty files, whereas does not.
+
+This are just some of the examples of the differences; when transferring files between MATLAB and Octave it is important to be aware of all the differences and try to write in a neutral fashion. In a slightly cheeky manner however, Octave does give a lauching option for a higher level of compatibility with MATLAB.
+
+
+--braindead
+    For compatibility with matlab, set initial values for user preferences to the following values
+
+              PS1                             = ">> "
+              PS2                             = ""
+              allow_noninteger_range_as_index = true
+              beep_on_error                   = true
+              confirm_recursive_rmdir         = false
+              crash_dumps_octave_core         = false
+              default_save_options            = "-mat-binary"
+              do_braindead_shortcircuit_evaluation = true
+              fixed_point_format              = true
+              history_timestamp_format_string = "%%-- %D %I:%M %p --%%"
+              page_screen_output              = false
+              print_empty_dimensions          = false
+
+    and disable the following warnings
+
+              Octave:abbreviated-property-match
+              Octave:fopen-file-in-path
+              Octave:function-name-clash
+              Octave:load-file-in-path
+
+
