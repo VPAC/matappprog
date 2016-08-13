@@ -16,4 +16,8 @@ As VPAC comes to a close, the following publication compiles some of the materia
 The Repository
 --------------
 
-The top-level directory of this repository includes the book, "Mathematical Applications and Programming : R, Octave, and Maxima" (ISBN 978-0-9943373-2-0). Programs and PBS submission scripts and other associated files are included in each directory according to the chapter number.
+The most recent version of this book "Mathematical Applications and Programming : R, Octave, and Maxima" (ISBN 978-0-9943373-2-0) is kept on the VPAC github (`https://github.com/VPAC/matappprog`). Programs and PBS submission scripts and other associated files are included in each directory according to the chapter number.
+
+![ISBN Barcode](https://github.com/VPAC/superlinux/blob/master/isbn-978-0-9943373-2-0.png)
+
+
