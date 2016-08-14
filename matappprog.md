@@ -2123,3 +2123,177 @@ This are just some of the examples of the differences; when transferring files b
               Octave:load-file-in-path
 
 
+# Symbolic Computation with Maxima
+
+## About Maxima and Installation
+
+Maxima is a computer algebra system (CAS) originally based on Macyma that is particularly useful for symbolic operations, but can also be used numerical operations. It is written in Common Lisp and designed to run on all POSIX systems including Linux, Mac OSX, and also with ports for MS-Windows. Whilst written in Common Lisp it is also designed that it can be extended with the use of Lisp programs. It will have one of a number of versions of Lisp as a dependency.
+
+Like many good things in life it is free software, released under the GNU Public License. For it's own part, Macsyma was developed at MIT with the earliest work being conducted in 1966. It's chief developer from the early 1980s, William Schelter, received permission from the US Department of Energy in 1998 to release a version under the GPL; that became Maxima. For plotting and display Maxima can make use of Gnuplot. The most popular graphical user interfaces for Maxima in wxMaxima, Jupyter, and GMaxima.
+
+Maxima (and gnuplot etc) can be installed by package managers assuming they are in the local system's repositories, or by source. A preference is given to the latter for performance and optimisation and is commonly found in a High Performance Computer environment. The following is an example of how a systems administrator may conduct such an installation on such a system.
+
+```
+mkdir -p /usr/local/src/MAXIMA
+cd /usr/local/src/MAXIMA
+wget http://sourceforge.net/projects/maxima/files/Maxima-source/5.36.1-source/maxima-5.36.1.tar.gz
+tar xvf maxima-5.36.1.tar.gz
+cd maxima-5.36.1/
+mkdir -p /usr/local/maxima/5.36.1
+./configure --prefix=/usr/local/maxima/5.36.1
+make
+make check
+make install
+```
+
+Following this an environment modules file should be created so that users can dynamically change paths and versions of an application as required. An appropriate directory path will be required.
+
+```
+mkdir /usr/local/Modules/modulefiles/maxima
+cd /usr/local/Modules/modulefiles/maxima
+```
+
+The .base file sets the library, libexec, binary, and manual paths. Note that in this case sbcl (Steel Bank Common Lisp) is also loaded. 
+
+```
+#%Module1.0#####################################################################
+##
+## $name modulefile
+##
+set ver [lrange [split [ module-info name ] / ] 1 1 ]
+set name [lrange [split [ module-info name ] / ] 0 0 ]
+set loading [module-info mode load]
+set desc [join [read [ open "/usr/local/Modules/modulefiles/$name/.desc" ] ] ]
+module-whatis   "$desc (v$ver)"
+if { $loading && ![ is-loaded sbcl ] } {
+  module load sbcl
+}
+prepend-path LD_LIBRARY_PATH /usr/local/$name/$ver/lib
+prepend-path PATH /usr/local/$name/$ver/libexec/$name/$ver
+prepend-path PATH /usr/local/$name/$ver/bin
+prepend-path MANPATH /usr/local/$name/$ver/share/man
+```
+
+The variables allow for a symlink to be created to the `.base` file e.g., ln -s .base 5.36.1`.
+
+A .version file sets the default in the modules system:
+
+```
+#%Module1.0###########################################################
+##
+## version file for module
+##
+set ModulesVersion      "5.36.1"
+```
+
+Finally, a  brief description of the application in the .desc file which associates with the command `module whatis maxima`.
+
+```
+Maxima is a system for the manipulation of symbolic and numerical expressions, including differentiation, integration, Taylor series, Laplace transforms, ordinary differential equations, systems of linear equations, polynomials, and sets, lists, vectors, matrices, and tensors.
+```
+
+## Help, Editing, and Errors
+
+Once installed Maxima can be invoked on the command line which will put the user in a lisp-based intrepretative shell. Commands are terminated with a semicolon with notation to differentiate between user input and program output. Help is not invoked with the `help` command but rather with `describe(topic)`, `example(topic)` or `? topic`, for each function. The command `apropos` will search flags and functions with a particular string. A demonstration of functions can be invoked by the `demonstrate (topic)` command. To quit an interactive session use the `quit()` function.
+
+The following HPC session starts off by secure forwarding of X-Windows, then submission of a 12-hour interactive job, placing the user on to a compute node and not interrupting other users of the login (head) node, and loads the environment paths for the default version of Maxima and GNUplot, and then runs Maxima. 
+
+Note that throughout this chapter examples will be shown on the basic Maxima command-line. There are numerous alternatives (xMaxima, Emacs plugins etc), and the command-line is probably the least friendly for editing. However the purpose of high performance computing is computation not ease. Whilst extensive Maxima scripts should certainly be written with a more complete editing environment in mind, familiarity interacting with the Maxima command-line is a worthwhile for serious work.
+
+```
+[lev@cricetomys matappprog]$ ssh edward -Y
+[lev@edward ~]$ qsub -l nodes=1:ppn=2,walltime=12:00:00 -I -X
+[lev@edward043 ~]$ module load maxima
+[lev@edward043 ~]$ module load gnuplot
+[lev@edward043 ~]$ maxima
+Maxima 5.36.1 http://maxima.sourceforge.net
+using Lisp SBCL 1.2.12
+Distributed under the GNU Public License. See the file COPYING.
+Dedicated to the memory of William Schelter.
+The function bug_report() provides bug reporting information.
+(%i1) help;
+(%o1)      type `describe(topic);' or `example(topic);' or `? topic'
+(%i2) describe (integrate);
+ -- Function: integrate
+          integrate (<expr>, <x>)
+          integrate (<expr>, <x>, <a>, <b>)
+
+     Attempts to symbolically compute the integral of <expr> with
+     respect to <x>.  'integrate (<expr>, <x>)' is an indefinite
+     integral, while 'integrate (<expr>, <x>, <a>, <b>)' is a definite
+     integral, with limits of integration <a> and <b>.  The limits
+     should not contain <x>, although 'integrate' does not enforce this
+     restriction.  <a> need not be less than <b>.  If <b> is equal to
+     <a>, 'integrate' returns zero.
+..
+..
+(%i3) example(integrate);
+
+(%i4) test(f):=block([u],u:integrate(f,x),ratsimp(f-diff(u,x)))
+(%o4) test(f) := block([u], u : integrate(f, x), ratsimp(f - diff(u, x)))
+(%i5) test(sin(x))
+..
+..
+(%i21) quit();
+```
+
+There is a test suite which can be run. By default it does not show results, but this can be forced by a function parameter. This will, by the way, generate a lot of output. An alternative input terminator to the semicolon is the dollar sign ($), which suppresses the display. The following command is for a bug_report, which provides a URL for where to report bugs to, and the Maxima build information.
+
+```
+(%i1) run_testsuite(display_all = true);
+..
+..
+..
+98/98 tests passed (not counting 11 expected errors)
+No unexpected errors found out of 10,185 tests.
+Evaluation took:
+  248.509 seconds of real time
+  248.063289 seconds of total run time (243.318010 user, 4.745279 system)
+  [ Run times consist of 9.774 seconds GC time, and 238.290 seconds non-GC time. ]
+  99.82% CPU
+  17,386 forms interpreted
+  12,597 lambdas converted
+  497,056,429,309 processor cycles
+  35,729,959,168 bytes consed
+  
+(%o0)                                done
+(%i1) bug_report();
+Please report bugs to:
+    http://sourceforge.net/p/maxima/bugs
+To report a bug, you must have a Sourceforge account.
+Please include the following information with your bug report:
+-------------------------------------------------------------
+Maxima version: "5.36.1"
+Maxima build date: "2015-06-18 12:03:16"
+Host type: "x86_64-unknown-linux-gnu"
+Lisp implementation type: "SBCL"
+Lisp implementation version: "1.2.12"
+-------------------------------------------------------------
+The above information is also reported by the function 'build_info()'.
+(%o1) 
+```
+
+A computation can be aborting without exiting Maxima with ^C - which is very handy if a computation is taking too long due to an input error. To repeat a user input command, place two single quotes quotes before the input line number. To refer to the output result, either use the o label or a percent symbol. 
+
+(%i1) run_testsuite(display_all = true);
+..
+..
+^CEvaluation took:
+  0.201 seconds of real time
+  0.198970 seconds of total run time (0.131980 user, 0.066990 system)
+  99.00% CPU
+  9 lambdas converted
+  400,866,776 processor cycles
+  23,851,536 bytes consed
+  before it was aborted by a non-local transfer of control.
+(%i1) plot2d(x^2-x+3,[x,-10,10]);
+(%o1)                  [/home/lev/maxout.gnuplot_pipes]
+(%i2) ''%i1;
+(%o2)                  [/home/lev/maxout.gnuplot_pipes]
+(%i3) 13^13;
+(%o3)                           302875106592253
+(%i4) %o3;
+(%o4)                           302875106592253
+(%i4) quit();
+
+
