@@ -2295,5 +2295,5 @@ A computation can be aborting without exiting Maxima with ^C - which is very han
 (%i4) %o3;
 (%o4)                           302875106592253
 (%i4) quit();
-
+```
 
