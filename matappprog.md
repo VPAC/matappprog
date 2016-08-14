@@ -2275,6 +2275,8 @@ The above information is also reported by the function 'build_info()'.
 
 A computation can be aborting without exiting Maxima with ^C - which is very handy if a computation is taking too long due to an input error. To repeat a user input command, place two single quotes quotes before the input line number. To refer to the output result, either use the o label or a percent symbol. 
 
+
+```
 (%i1) run_testsuite(display_all = true);
 ..
 ..
