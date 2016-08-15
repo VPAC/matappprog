@@ -16,9 +16,11 @@ Of course there are some similarities involved. Each of these applications and l
 
 Galileo Galilei, Il Saggiatore (1623)
 
-Source material this book has primarily come from the official documentation of the relevant progamming languages, that is, "An Introduction to R" (2015), "GNU Octave: A high-level interactive language for numerical computations" (2015), "Maxima 5.37.3 Manual" (2015), "The Julia Manual" (2015), along with "The End of Error: Unum Computing" by John Gustafson (2015), "Learning R" by Richrd Cotton (2013), "GNU Octave: Beginner's Guide" (2011) by Jesper Schmidt Hansen, and the frankly quite brilliant "Classical Mechanics with Maxima" (2016) by Todd Keene Timberlake, and J. Wilson Mixon.Jr., and, interestingly, "MATLAB(R) For Engineers" (2012) by Holly Moore.
+Source material this book has primarily come from the official documentation of the relevant progamming languages, that is, "An Introduction to R" (2015), "GNU Octave: A high-level interactive language for numerical computations" (2015), "Maxima 5.37.3 Manual" (2015), "The Julia Manual" (2015), along with "The End of Error: Unum Computing" by John Gustafson (2015), "Learning R" by Richrd Cotton (2013), "GNU Octave: Beginner's Guide" (2011) by Jesper Schmidt Hansen, "The Maxima Book" (2003) by Paulo Ney de Souza, Richard J. Fateman, Joel Moses, and Cliff Yapp, the frankly quite brilliant "Classical Mechanics with Maxima" (2016) by Todd Keene Timberlake, and J. Wilson Mixon.Jr., and, interestingly, "MATLAB(R) For Engineers" (2012) by Holly Moore.
 
 Another particular feature of this book however, is that it is particularly designed from the perspective of using high-performance computing and as an educational text. This makes it a little different from the numerous similar texts that are available for the various programming environments that are covered here. This difference is, of course, contextual. Much of the material draws upon training manuals produced at the Victorian Partnership for Advanced Computing over the past several years.
+
+One point must be emphasised however; there is a temptation to use computational systems to conduct mathematical operations without understanding the concepts behind those operations. There is some great dangers in doing this. Firstly, it means that that the user will not be able to recognise their own input errors and incorrect reasoning - garbage in and garbage out. Secondly, they will miss errors in the program, and especially those tied to some of the problems related to some inherent problems in computation (the aforementioned book by John Gustafson is a very interesting exploration in this subject).
 
 I also wish to thank several other contributors who assisted in this manuscript, including Chelton Evans from the Royal Melbourne Institute of Technology, and  Mark Greenaway of the University of Sydney. All errors and omissions are my own.
 
@@ -2098,7 +2100,6 @@ MATLAB will execute a startup.m in the directory it was called from; Octave does
 
 This are just some of the examples of the differences; when transferring files between MATLAB and Octave it is important to be aware of all the differences and try to write in a neutral fashion. In a slightly cheeky manner however, Octave does give a lauching option for a higher level of compatibility with MATLAB.
 
-
 --braindead
     For compatibility with matlab, set initial values for user preferences to the following values
 
@@ -2127,7 +2128,11 @@ This are just some of the examples of the differences; when transferring files b
 
 ## About Maxima and Installation
 
-Maxima is a computer algebra system (CAS) originally based on Macyma that is particularly useful for symbolic operations, but can also be used numerical operations. It is written in Common Lisp and designed to run on all POSIX systems including Linux, Mac OSX, and also with ports for MS-Windows. Whilst written in Common Lisp it is also designed that it can be extended with the use of Lisp programs. It will have one of a number of versions of Lisp as a dependency.
+Maxima is a computer algebra system (CAS) originally based on Macsyma that is particularly useful for symbolic operations, but can also be used numerical operations. Macsyma's core design was established in 1968, and coding began in 1969. In 1982, the project was split with a commercial arm which continued in development until 1999. 
+
+The academic version of MIT Macsyma remained available and was distributed by the US Department of Energy (DOE), and was maintained by Bill Schelter. Under the name of Maxima, it was released under GPL license in 1999, and now remains under active maintenance and development.
+
+Maxima is written in Common Lisp and designed to run on all POSIX systems including Linux, Mac OSX, and also with ports for MS-Windows. Whilst written in Common Lisp it is also designed that it can be extended with the use of Lisp programs. It will have one of a number of versions of Lisp as a dependency.
 
 Like many good things in life it is free software, released under the GNU Public License. For it's own part, Macsyma was developed at MIT with the earliest work being conducted in 1966. It's chief developer from the early 1980s, William Schelter, received permission from the US Department of Energy in 1998 to release a version under the GPL; that became Maxima. For plotting and display Maxima can make use of Gnuplot. The most popular graphical user interfaces for Maxima in wxMaxima, Jupyter, and GMaxima.
 
@@ -2228,7 +2233,6 @@ The function bug_report() provides bug reporting information.
 ..
 ..
 (%i3) example(integrate);
-
 (%i4) test(f):=block([u],u:integrate(f,x),ratsimp(f-diff(u,x)))
 (%o4) test(f) := block([u], u : integrate(f, x), ratsimp(f - diff(u, x)))
 (%i5) test(sin(x))
@@ -2298,4 +2302,102 @@ A computation can be aborting without exiting Maxima with ^C - which is very han
 (%o4)                           302875106592253
 (%i4) quit();
 ```
+
+
+## Simple Numeric and Symbolic Calculations
+
+Whilst Maxima is primarily designed for symbolic computation it can also do numeric computations with arbitrary precision and size determined by the computers hardware. The usual operations can be conducted with `+` (addition), `\` (division), `*` (multiplication), `^` (exponent), and `!` (factorials). Maxima uses the standard order of operations, with primacy given to equations in parantheses. 
+
+```
+(%i1) 1+1+2*3;
+(%o1)                                  8
+(%i2) (1+1+2)*3;
+(%o2)                                 12
+(%i3) (1+1)*2^3;
+(%o3)                                 16
+```
+
+Maxima also allows the user to refer to the latest result through the % character, or to any previous input or output by its respective prompted %i (input) or %o (output) value. 
+
+```
+(%i4) %^5;
+(%o4)                               1048576
+(%i5) %o1+%o2+%o3;
+(%o5)                                 74
+```
+
+In order to assign a value to a variable, Maxima uses the colon (:), not the equal sign. The equal sign is used for representing equations.  Functions are assigned through ‘:=’. Plots of functions, like any other plot, assigns the variable, the function, and the minimum and maximum range.
+
+```
+(%i6) ses:7$ ok:8$ nau:9$
+(%i9) sqrt(ses^2+ok^2+nau^2);
+(%o9)                              sqrt(194)
+(%i10) float(sqrt(ses^2+ok^2+nau^2));
+(%o10)                         13.92838827718412
+(%i11) f(x) := sqrt(x);
+(%o11)                          f(x) := sqrt(x)
+(%i12) f(4);
+(%o12)                                 2
+(%i13) f(25);
+(%o13)                                 5
+(%i14) plot2d(sqrt(x),[x,0,1000]);
+(%o14)                 [/home/lev/maxout.gnuplot_pipes]
+(%i15) plot3d(x^2-y^2,[x,-4,4],[y,-4,4],[grid,16,16]);
+```
+
+Maxima will tend to give symbolic results (i.e., results including fractions, square roots, unevaluated trigonometric, exponential, or logarithmic functions) rather than floating-point (or numerical) results. Use function float, as in the examples above, to get floating-point solutions.
+
+The percentage (%) symbol represents the most recent result. The expand function 
+
+```
+(%i16) sin(20) + cos(20) + 1;float(%);
+(%o16)                       sin(20) + cos(20) + 1
+(%o17)                         2.32102731254102
+(%i17)
+```
+
+The following are reserved words in Maxima and cannot be used as variable names;
+
+```and at diff do else  elseif for from if in integrate limit next or product step sum then thru unless while```
+
+Some common constants and functions in Maxima include the following: 
+
+| Value			| Maxima Representation	|
+|:----------------------|:----------------------|
+| Natural log		| %e			|
+| Square root of -1	| %i			|
+| Pi 			| %pi			|
+| Phi, the Golden Mean	| %phi			|
+| Positive real infinity| %inf			|
+| Negative real infinity| %minf			|
+| Euler's constant	| %gamma		|
+| Boolean values	| true, false		|
+| Squart root		| sqrt			|
+| tangent		| tan			|
+| sine			| sin			|
+| cosine		| cos			|
+| exponential		| exp			|
+| change to float value	| float			|
+| absolute value	| abs			|
+
+
+Maxima only offers the natural logarithm function log. log10 is not available by default but can be defined as a function:
+
+```
+(%i16) log10(x):= log(x)/log(10);
+                                          log(x)
+(%o16)                        log10(x) := -------
+                                          log(10)
+
+(%i17) log10(10);
+(%o17)                                 1
+(%i18) log10(1000);
+                                   log(1000)
+(%o18)                             ---------
+                                    log(10)
+(%i19) 
+```
+
+
+
 
