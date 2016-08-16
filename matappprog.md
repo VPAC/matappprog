@@ -20,13 +20,11 @@ Source material this book has primarily come from the official documentation of 
 
 Another particular feature of this book however, is that it is particularly designed from the perspective of using high-performance computing and as an educational text. This makes it a little different from the numerous similar texts that are available for the various programming environments that are covered here. This difference is, of course, contextual. Much of the material draws upon training manuals produced at the Victorian Partnership for Advanced Computing over the past several years.
 
-One point must be emphasised however; there is a temptation to use computational systems to conduct mathematical operations without understanding the concepts behind those operations. There is some great dangers in doing this. Firstly, it means that that the user will not be able to recognise their own input errors and incorrect reasoning - garbage in and garbage out. Secondly, they will miss errors in the program, and especially those tied to some of the problems related to some inherent problems in computation (the aforementioned book by John Gustafson is a very interesting exploration in this subject).
-
-I also wish to thank several other contributors who assisted in this manuscript, including Chelton Evans from the Royal Melbourne Institute of Technology, and  Mark Greenaway of the University of Sydney. All errors and omissions are my own.
+One point must be emphasised however; there is a temptation to use computational systems to conduct mathematical operations without understanding the concepts behind those operations. There is some great dangers in doing this. Firstly, it means that that the user will not be able to recognise their own input errors and incorrect reasoning - garbage in and garbage out. Secondly, they will miss errors in the program, and especially those tied to some of the problems related to some inherent problems in computation (the aforementioned book by John Gustafson is a very interesting exploration in this subject). This is not to suggest that the laborious methods of yesteryear are being celebrated. After all, we have adopted computational mathematics because it is less prone to user error. It is just a warning that the user is very well grounded in the concepts.
 
 This book is part of a series designed to assist researchers, systems administrators, and managers in a variety of advanced computational tasks. Other books that will be published in this series include: Supercomputing with Linux, Sequential and Parallel Programming., Data Management Tools for eResearchers., Building HPC Clusters and Clouds., Teaching Research Computing to Advanced Learners., Quality Assurance in Technical Organisations., Technical Project Management, and A History of the Victorian Partnership of Advanced Computing.
 
-Thanks are given to the Victorian Partnership of Advanced Computing for the time and resources necessary for the publication of this book, and especially Bill Yeadon, manager of research and development, and Ann Borda, Chief Executive Officer, who both authorised its publication.
+Thanks are given to the Victorian Partnership of Advanced Computing for the time and resources necessary for the publication of this book, and especially Bill Yeadon, manager of research and development, and Ann Borda, Chief Executive Officer, who both authorised its publication. I also wish to thank several other contributors who assisted in this manuscript, including Chelton Evans from the Royal Melbourne Institute of Technology, and  Mark Greenaway of the University of Sydney. All errors and omissions are my own.
 
 
 Lev Lafayette, 2016
@@ -2201,9 +2199,9 @@ Maxima is a system for the manipulation of symbolic and numerical expressions, i
 
 Once installed Maxima can be invoked on the command line which will put the user in a lisp-based intrepretative shell. Commands are terminated with a semicolon with notation to differentiate between user input and program output. Help is not invoked with the `help` command but rather with `describe(topic)`, `example(topic)` or `? topic`, for each function. The command `apropos` will search flags and functions with a particular string. A demonstration of functions can be invoked by the `demonstrate (topic)` command. To quit an interactive session use the `quit()` function.
 
-The following HPC session starts off by secure forwarding of X-Windows, then submission of a 12-hour interactive job, placing the user on to a compute node and not interrupting other users of the login (head) node, and loads the environment paths for the default version of Maxima and GNUplot, and then runs Maxima. 
+Note that throughout this chapter examples will be shown on the basic Maxima command-line. There are numerous alternatives (xMaxima, Emacs plugins etc), and the command-line is probably the least friendly for editing. However the purpose of high performance computing is computation not ease. Whilst extensive Maxima scripts should certainly be written with a more complete editing environment in mind, familiarity interacting with the Maxima command-line is a worthwhile for serious work. For a user's desktop environment it is certainly recommended that of the alternative display methods is installed.
 
-Note that throughout this chapter examples will be shown on the basic Maxima command-line. There are numerous alternatives (xMaxima, Emacs plugins etc), and the command-line is probably the least friendly for editing. However the purpose of high performance computing is computation not ease. Whilst extensive Maxima scripts should certainly be written with a more complete editing environment in mind, familiarity interacting with the Maxima command-line is a worthwhile for serious work.
+The following HPC session starts off by secure forwarding of X-Windows, then submission of a 12-hour interactive job, placing the user on to a compute node and not interrupting other users of the login (head) node, and loads the environment paths for the default version of Maxima and GNUplot, and then runs Maxima. 
 
 ```
 [lev@cricetomys matappprog]$ ssh edward -Y
@@ -2279,7 +2277,6 @@ The above information is also reported by the function 'build_info()'.
 
 A computation can be aborting without exiting Maxima with ^C - which is very handy if a computation is taking too long due to an input error. To repeat a user input command, place two single quotes quotes before the input line number. To refer to the output result, either use the o label or a percent symbol. 
 
-
 ```
 (%i1) run_testsuite(display_all = true);
 ..
@@ -2300,11 +2297,40 @@ A computation can be aborting without exiting Maxima with ^C - which is very han
 (%o3)                           302875106592253
 (%i4) %o3;
 (%o4)                           302875106592253
-(%i4) quit();
 ```
 
+User input can be established through the `read()` function. It simple reads in an expression from the console and returns the evaluated expression. The expression needs to be terminated with a semi-colon. 
 
-## Simple Numeric and Symbolic Calculations
+```
+(%i5) expr: 42;
+(%o5) expr: read;
+(%i6) expr: read ("The current value is", expr. "Provide the new answer.")$
+The current value is 42 Provide the new answer. 
+36;
+(%i7) expr;
+(%o7)                                36
+
+```
+
+The option variable `ibase` is used to change the base of integers read by Maxima, and `obase` is the value for integers displayed. Both can have any value from 2 and 36 (in decimal base). If either is set to a value greater than 10, letters replace those values over 9. Note that the output includes the idenifier and input line numbers. Base-2 is, of course, a popular choice.
+
+```
+(%i8) obase : 2$
+(%o1000)                              100100
+(%i110) obase : 10$ 
+(%o9)
+```
+
+The `playback()` function displays input, output, and intermediate expressions, without recomputing them, a very handy tool for reviewing previous work in a session. It only displays the expressions; other output (e.g., error messages) is not displayed. It is usual to bind the playback function with a range `playback ([<m>, <n>])` to displays input, output, and intermediate expressions with numbers from <m> through <n>. Without such parameters all expressions from a session are displayed. Another common option is `playback(slow)`, which pauses between expressions and waits for the user to press enter before moving to the next expression.
+
+```
+(%i9) playback(slow);
+..
+(%o9) done
+(%o10) quit();
+```
+
+## Operators, Expressions, and Data
 
 Whilst Maxima is primarily designed for symbolic computation it can also do numeric computations with arbitrary precision and size determined by the computers hardware. The usual operations can be conducted with `+` (addition), `\` (division), `*` (multiplication), `^` (exponent), and `!` (factorials). Maxima uses the standard order of operations, with primacy given to equations in parantheses. 
 
@@ -2328,6 +2354,8 @@ Maxima also allows the user to refer to the latest result through the % characte
 
 In order to assign a value to a variable, Maxima uses the colon (:), not the equal sign. The equal sign is used for representing equations.  Functions are assigned through ‘:=’. Plots of functions, like any other plot, assigns the variable, the function, and the minimum and maximum range.
 
+Maxima will tend to give symbolic results (i.e., results including fractions, square roots, unevaluated trigonometric, exponential, or logarithmic functions) rather than floating-point (or numerical) results. Use function float() to get floating-point solutions.
+
 ```
 (%i6) ses:7$ ok:8$ nau:9$
 (%i9) sqrt(ses^2+ok^2+nau^2);
@@ -2345,22 +2373,27 @@ In order to assign a value to a variable, Maxima uses the colon (:), not the equ
 (%i15) plot3d(x^2-y^2,[x,-4,4],[y,-4,4],[grid,16,16]);
 ```
 
-Maxima will tend to give symbolic results (i.e., results including fractions, square roots, unevaluated trigonometric, exponential, or logarithmic functions) rather than floating-point (or numerical) results. Use function float, as in the examples above, to get floating-point solutions.
-
-The percentage (%) symbol represents the most recent result. The expand function 
+The percentage (%) symbol represents the most recent result. The expand function multiplies out product and exponentiated sums, and expands sub-expressions. 
 
 ```
 (%i16) sin(20) + cos(20) + 1;float(%);
 (%o16)                       sin(20) + cos(20) + 1
 (%o17)                         2.32102731254102
-(%i17)
+(%i17) expr:(x+1)^2*(y+1)^3;
+                                      2        3
+(%o17)                         (x + 1)  (y + 1)
+(%i18) expand(expr);
+        2  3        3    3      2  2        2      2      2                    2
+(%o18) x  y  + 2 x y  + y  + 3 x  y  + 6 x y  + 3 y  + 3 x  y + 6 x y + 3 y + x
+                                                                      + 2 x + 1
+
 ```
 
 The following are reserved words in Maxima and cannot be used as variable names;
 
 ```and at diff do else  elseif for from if in integrate limit next or product step sum then thru unless while```
 
-Some common constants and functions in Maxima include the following: 
+Some common constants and functions in Maxima include the following, with the usual Hellenic letters used by name for some constants. A complex expression is specified by adding the real part of the expression to %i times the imaginary part. 
 
 | Value			| Maxima Representation	|
 |:----------------------|:----------------------|
@@ -2368,35 +2401,108 @@ Some common constants and functions in Maxima include the following:
 | Square root of -1	| %i			|
 | Pi 			| %pi			|
 | Phi, the Golden Mean	| %phi			|
-| Positive real infinity| %inf			|
-| Negative real infinity| %minf			|
 | Euler's constant	| %gamma		|
+| Positive real infinity| inf			|
+| Negative real infinity| minf			|
+| Complex infinity	| infinity		|
 | Boolean values	| true, false		|
 | Squart root		| sqrt			|
 | tangent		| tan			|
 | sine			| sin			|
 | cosine		| cos			|
 | exponential		| exp			|
-| change to float value	| float			|
-| absolute value	| abs			|
-
+| Absolute value	| abs			|
+| Indefinite result	| ind			|
+| Undefined result	| und			|
 
 Maxima only offers the natural logarithm function log. log10 is not available by default but can be defined as a function:
 
 ```
-(%i16) log10(x):= log(x)/log(10);
+(%i19) log10(x):= log(x)/log(10);
                                           log(x)
-(%o16)                        log10(x) := -------
+(%o19)                        log10(x) := -------
                                           log(10)
 
-(%i17) log10(10);
-(%o17)                                 1
-(%i18) log10(1000);
+(%i20) log10(10);
+(%o20)                                 1
+(%i21) log10(1000);
                                    log(1000)
-(%o18)                             ---------
+(%o21)                             ---------
                                     log(10)
-(%i19) 
 ```
+
+As mentioned, the function float is to get floating-point solutions. This conversts all integraters, rational numbers, and bigfloats to floating point. The function bfloat() will convert numbers in an expression to bigfloat numbers, with the number of significant digits specified by the global variable `fpprec`. A conversion from floats to bigfloats can be carried out with the `float2bf()` function.
+
+The `rationlise()` function will convert all double floats and big floats in an expresion to their rational equivalents. These values are exact, and as a result can lead to some surprising results. Note how in the following, the value 0.1 does not equal 1/10, as the latter real has a repeating (not terminating) binary representation to the precision of the system. 
+
+```
+(%i22) rationalize (sin (0.1*x + 5.6));
+                       3602879701896397 x   3152519739159347
+(%o22)             sin(------------------ + ----------------)
+                       36028797018963968    562949953421312
+```
+
+Maxima draws a distinction between its numerical, symbolic, and string data types. Strings are represented as double-quoted character sequences, and can include any characters (including tabs, newlines, carriage returns etc), with the backslash as an escape metacharacter to display values such as the literal double-quote. Note that there is a no type 'character' in Maxima - this would be a string of one-character length.
+
+The concat() function concatanes arguements and evaluates to atomic components. The return value is a symbol if the first argument is a symbol and a string otherwise. The single quote prevents evaluation. 
+
+A symbol constructed by concat may be assigned a value and appear in expressions. The :: (double colon) assignment operator evaluates its left-hand side. Whilst operations may occur on values prior to evaluation, their output is in fact a string, even if they look like a number.
+
+The function `string()` converts an expression to a string.
+
+```
+(%i23) stringed: concat(ses,ok,nau);
+(%o23)                                789
+(%i15) concat('ses,ok,nau);                     
+(%o15)                               ses89
+(%i16) stringed2: concat(ses*2,ok*2,nau*2);
+(%o16)                              141618
+(%i17) stringedplus: concat(ses,ok,nau) + 11;
+(%o17)                             789 + 11
+```
+
+Apart from data types, data in Maxima can also be expressed in structures. A typical data structure is a list, expressed within brackets and from which elements can be associated. For those who know the programming language Lisp, which Maxima is written, the importance of the list in that language is equivalent in Maxima.
+
+The `append()` function can add elements to a list, whereas a `delete()` function will remove elements. The function `makelist()` creates an empty list by itself; the function parameter creates elements according to the expression, in a general expression of `makelist (expr, i, i_0, i_max, step)`. In the following example the random function is called to simulate a ten throws of a six-sided dice.
+
+```
+(%i1) listo: [ses, sep, ok];
+(%o1)                           [ses, sep, ok]
+(%i2) listo[3];
+(%o2)                                 ok
+(%i13) listo : append ([nulo, unu, du, tri, kvar, kvin],[ses, sep, ok, nau]);
+(%o13)        [nulo, unu, du, tri, kvar, kvin, ses, sep, ok, nau]
+(%i14) listo;
+(%o14)        [nulo, unu, du, tri, kvar, kvin, ses, sep, ok, nau]
+(%i20) listo : delete(nulo,[nulo, unu, du, tri, kvar, kvin, ses, sep, ok, nau]);
+(%o20)           [unu, du, tri, kvar, kvin, ses, sep, ok, nau]
+(%i24) dice : makelist(random(5)+1,10);
+(%o24)                  [5, 5, 4, 5, 2, 2, 2, 4, 1, 2]
+```
+
+Lists can be treated as explicit vectors. As a result, operations can be performed on lists in association with other lists.
+
+```
+(%i28) vectorsym: [a, b, c, d];                                                
+(%o28)                           [a, b, c, d]
+(%i29) vectornum: [1, 2, 3, 4];
+(%o29)                           [1, 2, 3, 4]
+(%i30) vectorsym + vectornum;
+(%o30)                   [a + 1, b + 2, c + 3, d + 4]
+(%i31) vectorsym - vectornum;
+(%o31)                   [a - 1, b - 2, c - 3, d - 4]
+(%i32) vectorsym * vectornum;
+(%o32)                        [a, 2 b, 3 c, 4 d]
+(%i33) vectorsym / vectornum; 
+                                     b  c  d
+(%o33)                           [a, -, -, -]
+                                     2  3  4
+```
+
+An array is a multi-dimensional list. The command `array (<name>, <type>, <dim_1>, ..., <dim_n>)` creates an array, with elements of a specified type, such as 'fixnum' for integers 'flonum' for floating-point numbers. The number of dimension is less than or equal to 5. If the array is assigned to a subscripted variable before declaring the corresponding array, an undeclared array is created, which is more typical. Undeclared arrays grow dynamically by hashing as more elements are assigned values. 
+
+The function `arrayinfo()` will return information about the array specified in a paramter. For declared arrays, arrayinfo returns a list including the number of dimensions, and the size of each dimension.  For undeclared arrays, arrayinfo returns a list including the number of subscripts, and the subscripts of every element which has a value. For array functions or subscripted functions, arrayinfo returns a list including the number of subscripts, and any subscript values for which there are stored function values, or lambda expressions, respectively. In all cases the elements of the array, are returned by `listarray()`.
+
 
 
 
