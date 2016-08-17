@@ -2503,7 +2503,42 @@ An array is a multi-dimensional list. The command `array (<name>, <type>, <dim_1
 
 The function `arrayinfo()` will return information about the array specified in a paramter. For declared arrays, arrayinfo returns a list including the number of dimensions, and the size of each dimension.  For undeclared arrays, arrayinfo returns a list including the number of subscripts, and the subscripts of every element which has a value. For array functions or subscripted functions, arrayinfo returns a list including the number of subscripts, and any subscript values for which there are stored function values, or lambda expressions, respectively. In all cases the elements of the array, are returned by `listarray()`.
 
+To fill an array the `fillarray()` function is used, with two parameters. The first is the array to be filled, the second is a list or an existing array. If a specific type was declared for an array when it was created, it can only be filled with elements of that same type. If the dimensions of the parameters are different, the array is filled in row-major order. If there are not enough elements in the second parameter the last element is used to fill out the rest of array. If there are too many, the remaining ones are ignored.  Multple-dimension arrays are filled in row-major order.
 
+```
+(%i34) array (numeroj, fixnum, 10);
+(%o34)                          numeroj
+(%i35) listarray (numeroj);
+(%o35)                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+(%i36) fillarray (,dice);
+(%o36)                          numeroj
+(%i37) listarray (numeroj);
+(%o37)              [5, 5, 4, 5, 2, 2, 2, 4, 1, 2]
+(%i38) array2d : make_array (fixnum, 2, 5);
+(%o38)            {Lisp Array: #2A((0 0 0 0 0) (0 0 0 0 0))}
+(%i39) fillarray (array2d, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+(%o39)            {Lisp Array: #2A((1 2 3 4 5) (6 7 8 9 10))}
+```
 
+A general data aggregate structure is an expression whose arguments (which can be datatypes, variables, expressions etc) are identified b the field name and the expression by the operator, the structure name.  Structures are defined by the `defstruct()` function. In the format `defstruct (S(a_1, ... , a_n))`, the list of named fields a_1,..., a_n is associated with a symbol S. The `new()` function creates a new instance of the structure with the structure name as the paramter. 
 
+The `@`  is the operator used to access fields. The expression `S@a` refers to the value of field a of the structure instance S; the expression `kill(S@a)` removes the value of field a in x. The function `structures()` displays user-defined structures. The function `kill()` removes the structure.
 
+```
+(%i40) defstruct (vortoj (unu, du, tri, kvar, kvin));
+(%o41)                [vortoj(unu, du, tri, kvar, kvin)]
+(%i42) numeroj: new (vortoj (1, 2, 3, 4, 5));
+(%o42)       vortoj(unu = 1, du = 2, tri = 3, kvar = 4, kvin = 5)
+(%i43) numeroj@kvin;
+(%o44)                                 5
+(%i45) kill (numeroj@kvin);
+(%o46)                               done
+(%i47) numeroj;     
+(%o47)         vortoj(unu = 1, du = 2, tri = 3, kvar = 4, kvin)
+(%i48) structures();
+(%o48) [ef_data(exponent, reduction, primitive, cardinality, order, 
+factors_of_order), vortoj(unu, du, tri, kvar, kvin)]
+(%i49) kill(vortoj);
+(%o49)                               done
+(%i50) quit();
+```
