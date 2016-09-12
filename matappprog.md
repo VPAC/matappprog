@@ -2,8 +2,6 @@
 
 ## Foreword
 
-
-
 ## Preface
 
 From a naive perspective, it is initially surprising to discover that there are multiple mathematical application and programming languages. "Surely", the reasoning goes, "all computation is a mathematical problem. Do we really need this multiplicity of languages?" Of course, when one comes to the realisation that there are multiple subfields of mathematics and the ways that these are structures and, in using their "quasi-empiricism" (to use the phrase perhaps first used by Imre Lakatos), they will have different ways of interacting with the actual computer system itself and with varying levels of efficiency and effectiveness. Thus, different mathematical programming languages. 
@@ -12,17 +10,17 @@ In one sense, mathematical programming is an optimisation problem; the selection
 
 Of course there are some similarities involved. Each of these applications and languages will have their own procedures for installation, on where to find online help. They each have their own way of handling different data types, managing variables and functions, and incorporating these into scripts and programs, as well as different ways of providing graphical visualisation. As far as broad categories are concerned, mathematical computation has at least some conceptual areas in common - and as it should be. After all, mathematics is neither just an art, a science, or a law, but as philosophy, it is the language of the universe. 
 
-"Philosophy is written in this grand book, which stands continually open before our eyes (I say the 'Universe'), but can not be understood without first learning to comprehend the language and know the characters as it is written. It is written in mathematical language, and its characters are triangles, circles and other geometric figures, without which it is impossible to humanly understand a word; without these one is wandering in a dark labyrinth."
+"Philosophy is written in this grand book, which stands continually open before our eyes (I say the 'Universe'), but can not be understood without first learning to comprehend the language and know the characters as it is written. It is ?written in mathematical language, and its characters are triangles, circles and other geometric figures, without which it is impossible to humanly understand a word; without these one is wandering in a dark labyrinth."
 
 Galileo Galilei, Il Saggiatore (1623)
 
 Source material this book has primarily come from the official documentation of the relevant progamming languages, that is, "An Introduction to R" (2015), "GNU Octave: A high-level interactive language for numerical computations" (2015), "Maxima 5.37.3 Manual" (2015), "The Julia Manual" (2015), along with "The End of Error: Unum Computing" by John Gustafson (2015), "Learning R" by Richrd Cotton (2013), "GNU Octave: Beginner's Guide" (2011) by Jesper Schmidt Hansen, "The Maxima Book" (2003) by Paulo Ney de Souza, Richard J. Fateman, Joel Moses, and Cliff Yapp, the frankly quite brilliant "Classical Mechanics with Maxima" (2016) by Todd Keene Timberlake, and J. Wilson Mixon.Jr., and, interestingly, "MATLAB(R) For Engineers" (2012) by Holly Moore.
 
-Another particular feature of this book however, is that it is particularly designed from the perspective of using high-performance computing and as an educational text. This makes it a little different from the numerous similar texts that are available for the various programming environments that are covered here. This difference is, of course, contextual. Much of the material draws upon training manuals produced at the Victorian Partnership for Advanced Computing over the past several years.
+Another particular feature of this book however, is that it is particularly designed from the perspective of using high-performance computing and as an educational text. This makes it a little different from the numerous similar texts that are available for the various programming environments that are covered here. This difference is, of course, in partially contextual. Much of the material draws upon training manuals produced at the Victorian Partnership for Advanced Computing over several years. However there is also a practical engagement. Whilst the book itself is aimed at providing a base overview of mathematical programming, and therefore the examples are not particularly complex, it is also recognised that serious mathematical computation requires resources which simply are not available on a single user's desktop. This book addresses that gap in the marketplace. 
 
 One point must be emphasised however; there is a temptation to use computational systems to conduct mathematical operations without understanding the concepts behind those operations. There is some great dangers in doing this. Firstly, it means that that the user will not be able to recognise their own input errors and incorrect reasoning - garbage in and garbage out. Secondly, they will miss errors in the program, and especially those tied to some of the problems related to some inherent problems in computation (the aforementioned book by John Gustafson is a very interesting exploration in this subject). This is not to suggest that the laborious methods of yesteryear are being celebrated. After all, we have adopted computational mathematics because it is less prone to user error. It is just a warning that the user is very well grounded in the concepts.
 
-This book is part of a series designed to assist researchers, systems administrators, and managers in a variety of advanced computational tasks. Other books that will be published in this series include: Supercomputing with Linux, Sequential and Parallel Programming., Data Management Tools for eResearchers., Building HPC Clusters and Clouds., Teaching Research Computing to Advanced Learners., Quality Assurance in Technical Organisations., Technical Project Management, and A History of the Victorian Partnership of Advanced Computing.
+This book is part of a series designed to assist researchers, systems administrators, and managers in a variety of advanced computational tasks. Other books that have been published in this series include: Supercomputing with Linux, Sequential and Parallel Programming., Data Management Tools for eResearchers., Building HPC Clusters and Clouds., Teaching Research Computing to Advanced Learners., Quality Assurance in Technical Organisations., Technical Project Management, and A History of the Victorian Partnership of Advanced Computing.
 
 Thanks are given to the Victorian Partnership of Advanced Computing for the time and resources necessary for the publication of this book, and especially Bill Yeadon, manager of research and development, and Ann Borda, Chief Executive Officer, who both authorised its publication. I also wish to thank several other contributors who assisted in this manuscript, including Chelton Evans from the Royal Melbourne Institute of Technology, and  Mark Greenaway of the University of Sydney. All errors and omissions are my own.
 
@@ -30,10 +28,7 @@ Thanks are given to the Victorian Partnership of Advanced Computing for the time
 Lev Lafayette, 2016
  
 
-
-
 # Statistical Computation with R
-
 
 ## About R and Setup
 
@@ -49,18 +44,21 @@ To install R on a local Linux machine either use a prefereed package manager or 
 
 A simple installation process would be as follows:
 
-`cd /usr/local/src/R`
-`wget http://cran.r-project.org/src/base/R-3/R-3.0.2.tar.gz`
-`tar xvf R-3.0.2.tar.gz`
-`cd R-3.0.2`
-`./configure`
-`make`
-`make install`
+```
+cd /usr/local/src/R
+wget http://cran.r-project.org/src/base/R-3/R-3.0.2.tar.gz
+tar xvf R-3.0.2.tar.gz
+cd R-3.0.2
+./configure
+make
+make install
+```
 
 A very small sample simple dataset that is used throughout this chapter is `auspop.txt`. Whilst it is part of the github repository that the latest version of this book is stored in, it is also replicated here. It is 
 
 It shows the population of Australia, including states and major territories, measured in thousands of people every ten years - a fairly simple table.
 
+```
 Year NSW Vic. Qld SA WA Tas. NT ACT Aust.
 1917 1904 1409 683 440 306 193 5 3 4941
 1927 2402 1727 873 565 392 211 4 8 6182
@@ -72,6 +70,7 @@ Year NSW Vic. Qld SA WA Tas. NT ACT Aust.
 1987 5617 4210 2675 1393 1496 449 158 265 16264
 1997 6274 4605 3401 1480 1798 474 187 310 18532
 2007 6927 5246 4228 1592 2131 496 218 341 21181 
+```
 
 ## Invoking, Help, and Quitting
 
@@ -79,6 +78,7 @@ To start R on the cluster bring the environment module to your path. A local and
 
 Once R is loaded into the user's PATH it is a simple of case of invoking the command-line enviroment, by simply typing "R". The prompt indicates that R is waiting for input.  For example, imagine that one has reached the certainty that the great philosophers of mathematics, Betrand Russell and Alfred North Whitehead, did in their Principia Mathmatica... "From this proposition it will follow, when arithmetical addition has been defined, that 1+1=2." (Volume I, 1st edition, page 379)
 
+```
 bash-4.2$ ssh train12@trifid.in.vpac.org
 [train12@trifid ~]$ qsub -l walltime=12:00:0,nodes=1:ppn=2 -I
 [train12@trifid-35 ~]$ module avail R
@@ -145,7 +145,6 @@ Otherwise, be patient ...
 > example(sqrt) # Run locally; works best with graphics.
 > help.search("sqrt")
 ```
-
 
 These help requests are an example of a function in R. All R functions are invoked by calling the name of the function followed by parentheses which may include arguments. One of the most used functions is the c(), or combine function which takes the arguments into a vector.
 
@@ -721,7 +720,7 @@ Arrays can be constructed from vectors by the array function which specify the d
 (snip)
 ```
 
-The outer product may be calculated on numeric arrays with the dimension vectors concatenated and the data vector formed from  possible products of elements of the data vectors. The outer product is formed by the special operator %o%, or ab <- outer(a, b, "*")
+The outer product may be calculated on numeric arrays with the dimension vectors concatenated and the data vector formed from  possible products of elements of the data vectors. The outer product is formed by the special operator `%o%`, or `ab <- outer(a, b, "*")`
 
 ```
 > a <- array(1:20, dim=c(4,5))
@@ -737,7 +736,7 @@ The outer product may be calculated on numeric arrays with the dimension vectors
 
 ## Linear Equations, Eigenvalues, and Decomposition
 
-The operator %*% is used for matrix multiplication. If A and B are square matrices of the same size (n,b), then the matrix of element products is determined by multiplication of the variables and %*% is the matrix product.
+The operator `%*%` is used for matrix multiplication. If A and B are square matrices of the same size (n,b), then the matrix of element products is determined by multiplication of the variables and `%*%` is the matrix product.
 
 ```
 > a <- array (1:4, dim=c(2,2))
@@ -2395,6 +2394,7 @@ The following are reserved words in Maxima and cannot be used as variable names;
 
 Some common constants and functions in Maxima include the following, with the usual Hellenic letters used by name for some constants. A complex expression is specified by adding the real part of the expression to %i times the imaginary part. 
 
+
 | Value			| Maxima Representation	|
 |:----------------------|:----------------------|
 | Natural log		| %e			|
@@ -2542,3 +2542,100 @@ factors_of_order), vortoj(unu, du, tri, kvar, kvin)]
 (%o49)                               done
 (%i50) quit();
 ```
+
+## Plots and Files
+	
+A highly pleasing feature of Maxima is its strong integration with gnuplot and thus the inclusion of X11 libraries. This means, unlike a lot of applications, it is simple and secure to forward graphical output from an standard Linux HPC system. Usually an HPC system strongly recommends that visualisation is conducted via local machines whilst computation is conducted on the HPC system. One of the main issues that X11 by itself does not isolate applications from each other, and that the drivers are usually run as the root user (so they can access the hardware). Combined this introduces an interesting security risk which naturally enough makes HPC sysadmins justifiably nervous.
+
+The `plot2d()` function is perhaps the most basic and popular plotting function. It can displays one or several plots in two dimensions, ad can accept expressions or function name to define the plots, as long they depend on one variable and have a mandatory x_range. Plots can also be defined in discrete or parametric forms. The discrete form is used to plot a set of points with given coordinates, starting with the keyword discrete, followed by one or two lists of values, reflecting x and y coordinates respectively. A parametric plot is defined by a list starting with the keyword parametric, followed by two expressions or function names and a range for the parameter. If there are several plots to be plotted, a legend will be written to identity each of the expressions. 
+
+For example, a plot of 10 random numbers between 0 and 99, followed by a simple sine function, and a simple parabola.
+
+```
+(%i1) plot2d ([discrete, makelist ( random(99), 10)])$
+(%i1) plot2d (sin(x), [x, -%pi, %pi])$
+(%i1) plot2d ( x^2 - 1, [x, -4, 4])$
+```
+
+With Maxima, it is not just two-dimensional graphs that can be plotted. The function `plot3d()` can display a plot of one or more surfaces as functions of two variables or as a parametic. The general expression is `plot3d ([expr_1, ..., expr_n], x_range, y_range, ..., options, ...)`. 
+
+The first example simply plots a function of two variables. The second uses the z option to limit a function that goes to infinity. This particular example removes shading. The third example is the expressions to generate a e Kleinsche Fläche (aka Klein bottle). 
+
+With the gnuplot output the mouse can be used to change the perspective, although this may incur some latency effects depending on the complexity of the plot. 
+
+```
+(%i1) plot3d (x^2 - y^2, [x, -4, 4], [y, -6, 6], [grid, 100, 100], [mesh_lines_color,false])$
+(%i1) plot3d ( log ( x^2*y^2 ), [x, -2, 2], [y, -2, 2], [z, -8, 4], [palette, false], [color, red])$
+(%i1) expr_1: 5*cos(x)*(cos(x/2)*cos(y)+sin(x/2)*sin(2*y)+3)-10$
+(%i2) expr_2: -5*sin(x)*(cos(x/2)*cos(y)+sin(x/2)*sin(2*y)+3)$
+(%i3) expr_3: 5*(-sin(x/2)*cos(y)+cos(x/2)*sin(2*y))$
+(%i4) plot3d ([expr_1, expr_2, expr_3], [x, -%pi, %pi], [y, -%pi, %pi], [grid, 50, 50])$
+```
+
+Ever attractive ("You can create art and beauty on a computer", Steven Levy, Hackers: Heroes of the Computer Revolution, 1984), the `mandelbrot()` function creates a graphic represenation of the Mandlebrot set. The function requires the additional package `dynamics()`, however it is automatically loaded with this one. If called without arguments, it will use a default value of 9 iterations per point, a grid with dimensions set by the grid plot option (default 30 by 30) and a region that extends from -2 to 2 in both axes. The deafult is pretty rough, so it's worthwhile to provide a greater number of iterations, a larger grid and specifiying the range.
+
+Of a similar style, the `julia()` function creates a presentation for the complex number (x + i y), with the the x and y parameters mandatory. Like `mandelbrot()`', this function also requires the additional package `dynamics()` but is also automatically loaded. Optional paramters include the number of iterations, the x and y range, and, in this example, along with grid and colour options etc.
+
+```
+(%i10) mandelbrot();
+(%o10)                    [/home/lev/maxout.gnuplot]
+(%i1) mandelbrot ([iterations, 30], [x, -2, 1], [y, -1.2, 1.2], [grid,400,400])$
+(%i1) julia (-0.55, 0.6, [iterations, 36], [x, -0.3, 0.2], [y, 0.3, 0.9], [grid, 400, 400], [color_bar_tics, 0, 6, 36])$
+```
+
+Moving out of the domain of imaginary numbers, the `implicit_plot()` function displays a plot of a function on the real plane, defined implicitly by the expression with a domain in the plane is defined by the x and y range parameters. It explicitly requires the `load(implicit_plot);` command. The `contour_plot()` function takes an expression, the x range and the y range as parameters, with additional optional generic plot paramters for colour etc - the example here is "legend false". 
+
+```
+(%i6) load(implicit_plot);
+(%o6) 
+  /usr/local/maxima/5.36.1/share/maxima/5.36.1/share/contrib/implicit_plot.lisp
+(%i5) implicit_plot (x^2 = y^3 - 3*y + 1, [x, -4, 4], [y, -4, 4])$
+(%i3) contour_plot (x^2 + y^2, [x, -4, 4], [y, -4, 4], [legend,false],)$
+```
+
+Examples of plot options have been provided in the preceeding examples. These are, as the name implies, optional, and with default values. For example the `colour [color0, color1, ..., colorn];` can be expressed in RGB components, initialised by a hash and followed two hexidecimal values per component, or the values red, green, blue, magenta, cyan, yellow, orange, violet, brown, gray, black, or white. If the name of a given colour is, black will be used instead. Anothere xample is the `grid [grid, integer, integer` option which sets the number of grid points in the x- and y- axes for three-dimensional plotting, or the `grid2d[grid, value]` for lines on the xy plane. The default value is 
+30,30 for the former and false for the latter. 
+
+Along with plotting, a common - and indeed essential - user operation in Maxima is file manipulation. The functions `appendfile()` and `writefile()` both append a consol transcript to a filename, which is useful for saving session results. This can be closed in a session with `closefile()`. Note that the command `save()` will creates a Lisp file, not a Maxima file.
+
+To run a Maxima script of expressions, the `batch(filename)` command can be used, loading the filename (and path) as specified (e.g., `batch(~/maxima/test)`. An alternative is `batchload(filename)` which simply evaluates the script, without displaying input or output of the expressions within, and the `load(filename)` function which evaluates expressions in a filename, thus brininging variables, functions, and other objects into a Maxima session. If file name is passed to functions and the file name does not include a path, Maxima stores the file in the current working directory.
+
+Consider the following file, `~/maxima/solver.mac`, and the differences between batch mode, and load.
+
+```
+f(x):=x^4+x-2;
+roots:solve(f(x) = 0,x);
+print("The roots of x^4 + x -1 are ",float(roots));
+stringout("solver.mac",input);
+```
+
+```
+(%i4) batch("~/maxima/solver.max");
+read and interpret file: /data/user1/lev/maxima/solver.max
+..
+..
+(%o8)                        ~/maxima/solver.max
+(%i9) load("~/maxima/solver");
+The roots of x^4 + x -1 are  [x = (- 1.204387239234341
+...
+(%o9)                        ~/maxima/solver.mac
+(%i10)
+```
+
+## Polynominals
+
+## Special and Elliptic Functions
+
+## Differentiation, Integration, and Differential Equations
+
+### Matrices and Linear Equations
+
+
+
+
+
+
+
+
+
+
