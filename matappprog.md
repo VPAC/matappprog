@@ -752,7 +752,7 @@ The operator `%*%` is used for matrix multiplication. If A and B are square matr
 
 The function crossprod() forms "crossproducts", where crossprod(X, y) is the same as t(X) %*% y , but achieved more efficiently. For diag() its meaning depends on its argument. diag(v), where v is a vector, gives a diagonal matrix with elements of the vector as the diagonal entries. On the other hand diag(M), where M is a matrix, gives the vector of main diagonal entries of M.
 
-The function solve(a,b,..) is a generic function solves the linear equation a %*% x = b for x, where b can be either a vector or a matrix. The function eigen(A) calculates the eigenvalues and eigenvectors of a symmetric matrix Sm. The result of this function is a list of two components named values and vectors. The assignment eigen(a) calculates the eigenvalues and eigenvectors of a symmetric matrix A. Then ev$val is the vector of eigenvalues of Sm and ev$vec is the matrix of corresponding eigenvectors.  If just the eigenvalues are required then the assigment could use evals <- eigen(a)$values
+The function solve(a,b,..) is a generic function solves the linear equation a %*% x = b for x, where b can be either a vector or a matrix. The function eigen(A) calculates the eigenvalues and eigenvectors of a symmetric matrix Sm. The result of this function is a list of two components named values and vectors. The assignment eigen(a) calculates the eigenvalues and eigenvectors of a symmetric matrix A. Then ev$val is the vector of eigenvalues of Sm and ev$vec is the matrix of corresponding eigenvectors.  If just the eigenvalues are required then the assigment could use `evals <- eigen(a)$values`
 
 ```
 > ev <- eigen(a)
@@ -837,11 +837,11 @@ Components of lists may also be named, and in this case the component may be ref
 > WAlist$name
 ```
 
-The names of the list components in double square brackets, i.e., WAlist[["name"]] is the same as WAlist$name. This can be useful when the name of the component to be extracted is stored in another variable. The vector of names is in fact simply an attribute of the list like any other and may be handled as such. Other structures besides lists may, of course, similarly be given a names attribute also.
+The names of the list components in double square brackets, i.e., `WAlist[["name"]]` is the same as WAlist$name. This can be useful when the name of the component to be extracted is stored in another variable. The vector of names is in fact simply an attribute of the list like any other and may be handled as such. Other structures besides lists may, of course, similarly be given a names attribute also.
 
 `> x <- "name"; Lst[[x]]`
 
-New lists may be formed from existing objects by the function list() (e.g., Newlist <- list(name_1=object_1, ... name_n=object_n)). If these names are omitted, the components are numbered.  Lists, like any subscripted object, can be extended by specifying additional components. For example;
+New lists may be formed from existing objects by the function list() (e.g., Newlist `<- list(name_1=object_1, ... name_n=object_n))`. If these names are omitted, the components are numbered.  Lists, like any subscripted object, can be extended by specifying additional components. For example;
 
 `> List[5] <- list(matrix=Mat)`
 
@@ -2624,18 +2624,61 @@ The roots of x^4 + x -1 are  [x = (- 1.204387239234341
 
 ## Polynominals
 
+Polynomials are stored in Maxima in two ways; either as General Form or as Canonical Rational Expressions (CRE). The 
+latter represents is particularly suitable for expanded polynominials and rational functions. As always, this is only a small selection of the specialist functions available in Maxima for polynominals, but it does include the most common cases. 
+
+The `coeff()` function returns the coefficient of `x^n` in `expr`, where `expr` is a polynominal or a monomial (one-term polynominal) in `x`. Other than the `ratcoef()` function `coeff()` is a strictly syntactical operation and will only find literal instances of `x^n` in the internal representation of expr. An elaboration, `coeff(expr, x^n)` is equivalent to `coeff(expr, x, n)`. If omitted, n is assumed to be 1 whereas `x` may be a simple variable or a subscripted variable, or a subexpression of `expr` which comprises an operator and all of its arguments. The function `coeff(expr, x^n)` is equivalent to `coeff(expr, x, n)`.  The `coeff()` function operates over lists, matrices, and equations.
+
+```
+(%i4) coeff (x^3 + 2*x^2*y + 3*x*y^2 + 4*y^3, x);
+                                        2
+(%o4)                                3 y
+```
+
+The `ratcoef ()` function returns the coefficient of the expression `x^n` in the expression `expr`, again if omitted, `n` is assumed to be 1. The return value is free of the variables in `x`. If no coefficient of this type exists, 0 is returned. The `ratcoef()` function expands and rationally simplifies its first argument and so it may produce answers different from those of the `coeff()` which is purely syntactic. The function `ratcoef (expr, x, 0)`, viewing expr as a sum, returns a sum of those terms which do not contain x. If x occurs to any negative powers, ratcoef should not be used.
+
+```
+(%i6) coef ((x + 1)/y + x, x);
+                                   x + 1
+(%o6)                         coef(----- + x, x)
+                                     y
+(%i8) ratcoef ((x + 1)/y + x, x);
+                                     y + 1
+(%o8)                                -----
+                                       y
+```
+
+Elaborating further, the function `resultant()` computes the resultant, a polynomial expression of the coefficients of the two polynomials p1 and p2, eliminating the variable x, i.e., `resultant(p1, p2, x)`. The resultant is a determinant of the coefficients of x in p1 and p2, which equals zero if and only if p1 and p2 have a non-constant factor in common. If p1 or p2 can be factored, it is recommended to use the factor before calling resultant.
+
+```
+(%i9) resultant(2*x^2+3*x+1, 2*x^2+x+1, x);
+(%o9)                                  8
+(%i10) resultant(x+1, x+1, x);
+(%o10)                                 0
+```
+
+The option variable `resultant` controls which algorithm will be used to compute the resultant with the function resultant. The possible arguments are `subres` which uses the subresultant polynomial remainder sequence (PRS) algorithm, `mod` which uses the modular resultant algorithm, and `red` for reduced polynomial remainder sequence (PRS) algorithm. In most cases the default value subres should be best, however in for large degree univariate or bivariate problems `mod` may be better. The `determinant` of this matrix is the desired resultant. 
+
+The function `bezout()` is an alternative to the `resultant()` command, and returns a matrix. 
+
+```
+(%i11) bezout (2*x^2+3*x+1, 2*x^2+x+1, x);
+                                  [  0   2 ]
+(%o11)                            [        ]
+                                  [ - 4  0 ]
+(%i12) determinant(%);
+(%o12)                                 8
+(%i13) bezout (x+1, x+1, x);
+(%o13)                               [ 0 ]
+(%i14) determinant(%);
+(%o14)                                 0
+```
+
+
 ## Special and Elliptic Functions
 
 ## Differentiation, Integration, and Differential Equations
 
 ### Matrices and Linear Equations
-
-
-
-
-
-
-
-
 
 
