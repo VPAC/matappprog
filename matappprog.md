@@ -2087,7 +2087,7 @@ plot3 (z, exp (2i*pi*z), ";complex sinusoid;");
 Finally, the print() function allows the computational side of Octave to run, but the graphics exported to a file. The examples of mandelbrot.m and sierpinski.m in the Octave directory should be reviewed, run, and the output file copied to a local directory for visualisation. 
 
 
-# Octave and MATLAB(R)
+## Octave and MATLAB(R)
 
 Much of the syntax and behaviour of Octave is similar to MATLAB(R). The core principles - such as the use of matrices as a basic data type, support for complex numbers, extension via functions - are common to both. Nevertheless, whilst Octave is very similar to MATLAB(R) it is not quite the same.
 
@@ -2097,6 +2097,7 @@ MATLAB will execute a startup.m in the directory it was called from; Octave does
 
 This are just some of the examples of the differences; when transferring files between MATLAB and Octave it is important to be aware of all the differences and try to write in a neutral fashion. In a slightly cheeky manner however, Octave does give a lauching option for a higher level of compatibility with MATLAB.
 
+```
 --braindead
     For compatibility with matlab, set initial values for user preferences to the following values
 
@@ -2119,6 +2120,7 @@ This are just some of the examples of the differences; when transferring files b
               Octave:fopen-file-in-path
               Octave:function-name-clash
               Octave:load-file-in-path
+```
 
 
 # Symbolic Computation with Maxima
@@ -2129,7 +2131,11 @@ Maxima is a computer algebra system (CAS) originally based on Macsyma that is pa
 
 The academic version of MIT Macsyma remained available and was distributed by the US Department of Energy (DOE), and was maintained by Bill Schelter. Under the name of Maxima, it was released under GPL license in 1999, and now remains under active maintenance and development.
 
-Maxima is written in Common Lisp and designed to run on all POSIX systems including Linux, Mac OSX, and also with ports for MS-Windows. Whilst written in Common Lisp it is also designed that it can be extended with the use of Lisp programs. It will have one of a number of versions of Lisp as a dependency.
+Maxima is written in Common Lisp and designed to run on all POSIX systems including Linux, Mac OSX, and also with ports for MS-Windows. Whilst written in Common Lisp it is also designed that it can be extended with the use of Lisp programs. It will have one of a number of versions of Lisp as a dependency. The design of Maxima means it is largely function driven, and increasingly expansive. If a function can be written in Lisp, it can become a Maxima function. As a result it continues to grow and become more comprehensive. Only a small portion of the scope of Maxima is included in this chapter, but hopefully this does include most use cases.
+
+Specifically, this chapter covers the processes for installation from source with the additional consideration of using the environmental modules system, invoking the environment, getting help, editing, interpreting errors, core functionality such as operators, expressions, and data, along with the representation of plots and the access of files.
+
+There are a number of special Maxima functions for specific areas of mathematics, of which a few are provided in this book. This includes polynominials, special and elliptic functions, differentiation, integration, and differential equations, and matrices and linear Equations. There are others as well which are unfortunately outside the scope of this book, such as number theory, sets, tensor manipulation, and additional packages for various areas of work (e.g., financial mathematics), representation (3D visualisation), methods (Clebsch-Gordan and Wigner coefficients). 
 
 Like many good things in life it is free software, released under the GNU Public License. For it's own part, Macsyma was developed at MIT with the earliest work being conducted in 1966. It's chief developer from the early 1980s, William Schelter, received permission from the US Department of Energy in 1998 to release a version under the GPL; that became Maxima. For plotting and display Maxima can make use of Gnuplot. The most popular graphical user interfaces for Maxima in wxMaxima, Jupyter, and GMaxima.
 
@@ -2155,7 +2161,7 @@ mkdir /usr/local/Modules/modulefiles/maxima
 cd /usr/local/Modules/modulefiles/maxima
 ```
 
-The .base file sets the library, libexec, binary, and manual paths. Note that in this case sbcl (Steel Bank Common Lisp) is also loaded. 
+The .base file sets the library, libexec, binary, and manual paths. Note that in this case sbcl (Steel Bank Common Lisp) is also loaded. This should, of course, be modified for the particular version of Lisp being used.
 
 ```
 #%Module1.0#####################################################################
@@ -2624,8 +2630,29 @@ The roots of x^4 + x -1 are  [x = (- 1.204387239234341
 
 ## Polynominals
 
-Polynomials are stored in Maxima in two ways; either as General Form or as Canonical Rational Expressions (CRE). The 
-latter represents is particularly suitable for expanded polynominials and rational functions. As always, this is only a small selection of the specialist functions available in Maxima for polynominals, but it does include the most common cases. 
+Polynomials are stored in Maxima in two ways; either as General Form or as Canonical Rational Expressions (CRE). The latter represents is particularly suitable for expanded polynominials and rational functions. As always, this is only a small selection of the specialist functions available in Maxima for polynominals, but it does include the most common cases. 
+
+As an example consider the `bothcoef()` function. This returns a list whose first member is the coefficient of `x` in `expr`, and whose second member is the remaining part of expr. That is, `[A, B]` where `expr = A*x + B`
+
+```
+(%i8) islinear (expr, x) := block ([c],
+	c: bothcoef (rat (expr, x), x),
+	is (freeof (x, c) and c[1] # 0))$
+
+(%i9)  islinear ((r^2 - (x - r)^2)/x, x);
+(%o9)                                true
+```
+
+A relatively simple but very useful function is `denom()` which takes an expression as an argument and returns the denominator. The following example is interesting.
+
+```
+(%i11) x1:((x+2)/(x-4))-((x+1)/(x+4));
+                                 x + 2   x + 1
+(%o11)                           ----- - -----
+                                 x - 4   x + 4
+(%i12) denom(x1);
+(%o12)                                 1
+```
 
 The `coeff()` function returns the coefficient of `x^n` in `expr`, where `expr` is a polynominal or a monomial (one-term polynominal) in `x`. Other than the `ratcoef()` function `coeff()` is a strictly syntactical operation and will only find literal instances of `x^n` in the internal representation of expr. An elaboration, `coeff(expr, x^n)` is equivalent to `coeff(expr, x, n)`. If omitted, n is assumed to be 1 whereas `x` may be a simple variable or a subscripted variable, or a subexpression of `expr` which comprises an operator and all of its arguments. The function `coeff(expr, x^n)` is equivalent to `coeff(expr, x, n)`.  The `coeff()` function operates over lists, matrices, and equations.
 
@@ -2633,6 +2660,12 @@ The `coeff()` function returns the coefficient of `x^n` in `expr`, where `expr` 
 (%i4) coeff (x^3 + 2*x^2*y + 3*x*y^2 + 4*y^3, x);
                                         2
 (%o4)                                3 y
+(%i7) (a[4]*x^3 - a[3]*x^2 - a[2]*x^2 + a[1]*x, x, 4);
+(%o7)                                  4
+
+(%i3) coeff (sin(1+x)*sin(x) + sin(1+x)^2*sin(x)^2, sin(1+x)^2);
+                                       2
+(%o3)                               sin (x)
 ```
 
 The `ratcoef ()` function returns the coefficient of the expression `x^n` in the expression `expr`, again if omitted, `n` is assumed to be 1. The return value is free of the variables in `x`. If no coefficient of this type exists, 0 is returned. The `ratcoef()` function expands and rationally simplifies its first argument and so it may produce answers different from those of the `coeff()` which is purely syntactic. The function `ratcoef (expr, x, 0)`, viewing expr as a sum, returns a sum of those terms which do not contain x. If x occurs to any negative powers, ratcoef should not be used.
@@ -2673,6 +2706,21 @@ The function `bezout()` is an alternative to the `resultant()` command, and retu
 (%i14) determinant(%);
 (%o14)                                 0
 ```
+
+The `factor()` function in Maxima requires some attention. By itself it factions an expression, which contains any number of variables or functions, into factors irreducible over the integers, i.e., `factor(exp)`. An alternative, `factor(expr, p)` factors the argument expr over the field of rationals with the polynominal `p` as an adjoined element.
+
+In addition to this however, there are a number of variables and other functions which the factor function uses to determine its behaviour. For example, factor uses the `ifactors()` function when factoring integers. The following also illustrates a simple check.
+
+```
+(%i16) factor (2^32-1);              
+(%o16)                         3 5 17 257 65537
+(%i25) 2^32-1;
+(%o25)                            4294967295
+(%i24) 3*5*17*257*65537;
+(%o24)                            4294967295
+
+```
+
 
 
 ## Special and Elliptic Functions
