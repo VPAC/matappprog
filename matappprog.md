@@ -1,8 +1,64 @@
-# Introduction
+# Mathematical Applications and Programming: R, Octave, and Maxima
 
-## Foreword
+## Table of Contents
 
-## Preface
+0.0 Introduction
+0.1 Foreword
+0.2 Preface
+
+1.0 Statistical Computation with R
+1.1 About R and Setup
+1.2 Invoking, Help, and Quitting
+1.3 Calculations and Assignment
+1.4 Data Types
+1.5 Numerical Vectors
+1.6 Logical Vectors
+1.7 Character and Index Vectors
+1.8 Objects, Modes, and Class
+1.9 Factors
+1.10 Simple Arrays and Matrices
+1.11 Linear Equations, Eigenvalues, and Decomposition
+1.12 Matrix Creation, Concatenation, and Frequency
+1.13 Lists and Data Frames
+1.14 Files, Data, and Editing
+1.15 Probability
+1.16 Basic Statistical Models
+1.17 Conditions, Loops, and Functions 
+1.18 Graphics
+
+2.0 Numerical Computations with Octave
+2.1 About Octave and Setup
+2.2 Help, Editing, and Errors
+2.3 Data and Argumentation Types
+2.4 Numerical Data Types
+2.5 Strings
+2.6 Simple Matrix Mathematics
+2.7 Variables and Operations
+2.8 Manipulating Matrices
+2.9 Indexing Matrices
+2.10 Polynomials
+2.11 Functions
+2.12 Global Variables, Conditions, and Loops
+2.13 Graphics
+2.14 Octave and MATLAB(R)
+
+3.0 Symbolic Computation with Maxima
+3.1 About Maxima and Installation
+3.2 Help, Editing, and Errors
+3.3 Operators and Expressions
+3.4 Datatypes
+3.5 Plots and Files
+3.6 Polynominals
+3.7 Special and Elliptic Functions
+3.8 Differentiation, Integration, and Differential Equations
+3.9 Matrices and Linear Equations
+3.10 Programming Maxima
+
+# 0.0 Introduction
+
+## 0.1 Foreword
+
+## 0.2 Preface
 
 From a naive perspective, it is initially surprising to discover that there are multiple mathematical application and programming languages. "Surely", the reasoning goes, "all computation is a mathematical problem. Do we really need this multiplicity of languages?" Of course, when one comes to the realisation that there are multiple subfields of mathematics and the ways that these are structures and, in using their "quasi-empiricism" (to use the phrase perhaps first used by Imre Lakatos), they will have different ways of interacting with the actual computer system itself and with varying levels of efficiency and effectiveness. Thus, different mathematical programming languages. 
 
@@ -28,9 +84,9 @@ Thanks are given to the Victorian Partnership of Advanced Computing for the time
 Lev Lafayette, 2016
  
 
-# Statistical Computation with R
+# 1.0 Statistical Computation with R
 
-## About R and Setup
+## 1.1 About R and Setup
 
 R originated as an open-source implementaion of the S language mainly for statistical compution with an initial point release in 1997, and version 1.0 in 2000. It was originally developed by Ross Ihaka and Robert Gentleman of the University of Aukland and is free and open source software, licensed under the GPL. In addition to the base environment, R is extended by numerous packages produced my members of a particularly enthusiastic community.
 
@@ -72,7 +128,7 @@ Year NSW Vic. Qld SA WA Tas. NT ACT Aust.
 2007 6927 5246 4228 1592 2131 496 218 341 21181 
 ```
 
-## Invoking, Help, and Quitting
+## 1.2 Invoking, Help, and Quitting
 
 To start R on the cluster bring the environment module to your path. A local and unique installation will do this autonomatically. If the system has multiple versions of the same software application installed they environment paths will probably be invoked by a modules system (setting them by hand each time is painful, setting them as part of a .bash_profile or similar is less painful, using modules is easiest). The following example is from the Trifid high performance computing system at the Victorian Partnership for Advanced Computing. An interactive job is launched, placing the user, `train12` on to a compute node for 12 hours, to minimise resource utilisation on the login node.
 
@@ -156,7 +212,7 @@ Typing q on its own, without the parentheses, will display the text of the funct
 
 All R entities, including functions and data structures, exist as objects and can be viewed with an `ls()` or `objects()` function call.
 
-## Calculations and Assignment
+## 1.3 Calculations and Assignment
 
 A number of simple calculator functions are built in with R.  The application will evaluate and print the result of expressions typed on the R command line with the result on subsequent lines. The basic arithmetic syntax for addition, subtraction, multiplication, division, powers, and brackets is familiar enough. The order of operations is  brackets, powers, division, multiplication, subtraction, addition, conducted left-to-right.
 
@@ -282,7 +338,7 @@ It is also possible to save individual objects, or collections of objects into a
 > save(celsius, fahrenheit, file="tempscales.RData")
 ```
 
-## Data Types
+## 1.4 Data Types
 
 As implied in the previous section, R has a number of different data types, or mode in R-speak, which are commonly used, including numeric, integer, complex, logical, and character. Variable types can be determined by use of the class() function.
 
@@ -372,7 +428,7 @@ Parts of a character string can be extracted by the substr() function with start
 sub ("fox", "wolf". "The quick brown fox")
 ```
 
-## Numerical Vectors
+## 1.5 Numerical Vectors
 
 R operates on data structures, of which the most simple are vectors, a single entity of an ordered collection and a consistent data type, or mode. Examples thus far have been a vector of a single element. 
 
@@ -416,7 +472,7 @@ A simple vector sequences can also generated by R with arithematic priority assi
  [8] 22.991149 26.132741 29.274334 
 ```
 
-## Logical Vectors
+## 1.6 Logical Vectors
 
 In addition to numerical values, R also allows for logical vectors which can have the values TRUE, FALSE, or NA (not available). Logical vectors are created by establishing conditional statements where values in the vector are true or false depending on the statement. Logical operators include  <, <=, >, >=, == for exact equality and != for inequality. The which() function can be used to determine the vector elements that are true, useful if the vector is large.
 
@@ -466,7 +522,7 @@ Logical vectors may sometimes be used in ordinary arithmetic, in which case they
 [1] FALSE FALSE FALSE  TRUE
 ```
 
-## Character and Index Vectors
+## 1.7 Character and Index Vectors
 
 Character elements and vectors are also available in R, typically used for plotting labels. These are entered as single or double-quoted strings, with C-style escape sequences (e.g., \n, \t etc). Character vectors may be concatenated into a vector by the c() function. The paste() function takes an arbitrary number of arguments and concatenates them one by one into character strings. The arguments are by default separated in the result by a single blank character, but this can be changed by the named parameter, sep=string
 
@@ -513,7 +569,7 @@ Subsets of elements of a vector may be selected. With logical vectors the index 
 [1] NA
 ```
 
-## Objects, Modes, and Class
+## 1.8 Objects, Modes, and Class
 
 The vector examples provided are a type of object in R. All elements in a vector must have the same data type, or mode - although NA may seem as an exception there are, in a sense, different types of NA. In comparison to vectors, R can also have operations performed on objects called lists, which are of their own mode (list). Lists can have objects included in their sequence which individually can be of any mode. Because they are an object that includes objects they are known as a recursive object in R as opposed to an atomic object. Other recursive structures are those of mode function and expression.  Expressions as objects form an advanced part of R which will not be discussed in this guide, except indirectly when we discuss formulae used with modeling in R.
 
@@ -554,7 +610,7 @@ The function attributes(object) lists the non-intrinsic attributes defined for t
 [1] 1496 
 ```
 
-## Factors
+## 1.9 Factors
 
 Factors can be understood as variables which take on a limited number of different values, referred to as "categorical variables". They are analogous to enumerated types in other programming languages. Factors in R are stored as a vector of integer values with a corresponding set of character values to use when the factor is displayed. When using the factor function on the vector of values which will be returned as a vector of factor values both numeric and character variables can be used, although the factor's levels will always be character values.  To change the order in which the levels will be displayed from their default sorted order, the levels= argument can be used. If the ordering should also be used when performing comparisons, use the optional ordered=TRUE argument, creating an ordered factor.
 
@@ -613,7 +669,7 @@ The function tapply() is used to apply a function, here mean(), to each group of
 > incster <- tapply(incomes, statef, stderr)
 ```
 
-## Simple Arrays and Matrices
+## 1.10 Simple Arrays and Matrices
 
 A vector has been defined as single entity of an ordered collection and a consistent data type, or mode. This compares to an array, which consists of collection of subscripted data entries, of which a matrix is one type - an array of two-dimensions. A vector can be used as an array if it has the attribute dim(), and an array can be one-dimenional, in which case it is treated like a vector. Array ordering is according to column order. For example, an array a of dimensions 3,4,2 would be ordered with the individual elements a[1,1,1], a[2,1,1], .... a[2,4,2], a[3,4,2]. The notation a[,,] stands for the entire array, which is the same as omitting the subscripts entirely and just using a. For any array,the dimension vector may be referenced explicitly as dim(a) on either side of an assignment.
 
@@ -734,7 +790,7 @@ The outer product may be calculated on numeric arrays with the dimension vectors
 (snip)
 ```
 
-## Linear Equations, Eigenvalues, and Decomposition
+## 1.11 Linear Equations, Eigenvalues, and Decomposition
 
 The operator `%*%` is used for matrix multiplication. If A and B are square matrices of the same size (n,b), then the matrix of element products is determined by multiplication of the variables and `%*%` is the matrix product.
 
@@ -776,7 +832,7 @@ The function lsfit() returns a list giving results of a least squares fitting pr
 
 A closely related function is qr() which generates a matrix M into a product M - QR with an orthogonal matrix R and an upper triangular matrix R. QR decomposition is often used to solve the linear least squares problem, and is the basis for a particular eigenvalue algorithm, the QR algorithm.
 
-## Matrix Creation, Concatenation, and Frequency
+## 1.12 Matrix Creation, Concatenation, and Frequency
 
 Matrices can be created by the functions cbind() and rbind(). As the name indicates the former binds vectors according to column and the latter according to row. When calling the cbind function the arguments must be vectors (of any length, with values cyclically repeated as necessary) or matrices of the same number of rows. The returned value will be a matrix with the arguments concatenated to form the columns. The same applies for rows with rbind(). Because the result of rbind() or cbind() always has matrix status their use is the simplest ways explicitly to allow a vector to be treated as a column or row matrix. 
 
@@ -821,7 +877,7 @@ Making use of the incomes, a incomef can be created as a factor giving a suitabl
 (snip)
 ```
 
-## Lists and Data Frames
+## 1.13 Lists and Data Frames
 
 A list in R list is an object consisting of an ordered collection of components. These components can be of different modes or types. For example, a list could consist of a numeric vector, a logical value, a matrix, a complex vector, a character array, a function, and so on. Here is a simple example of how to make a list:
 
@@ -869,7 +925,7 @@ Image files can be attached, thus making objects in the file available on reques
 ```
 Data frames are considered very useful if one is working with different problems in the same working directory as they allow for many temporary modifications.
 
-## Files, Data, and Editing
+## 1.14 Files, Data, and Editing
 
 When dealing with datasets of any size beyond the trivial, it is almost certain that these will exist as external files. These can be typically read in as a data frame by using the read.table() function which, as the name indicates, reads data in a table format. The external file will normally have a name for each variable in the data frame and each additional line of the file has as its first item a row label and the values for each variable. If the header is already in the data file, it can be optionally omitted.
 
@@ -923,7 +979,7 @@ When called on a data frame or matrix, the edit() function brings an spreadsheet
 
 `> auspopnew <- edit(auspop)`
 
-## Probability
+## 1.15 Probability
 
 Unsurprisingly, R contains a great number of functions for probability. Qualitative or categorical data is where values belong to known, defined, and non-overlapping classes. This are the most common collection of data samples, and can include temperature measurements in locations, grades of work, economic growth by census collection districts, and so forth.
 
@@ -1051,7 +1107,7 @@ mean of x mean of y
  80.02077  79.97875 
 ```
 
-## Basic Statistical Models
+## 1.16 Basic Statistical Models
 
 R provides a suite of functions and facilities that make statistical models relatively simple a number of which are illustrated here. Basic statistical numerical measures, such as mean, median, quartile, range, interquartile, variance, standard deviation, etc, are all built in as functions.
 
@@ -1139,7 +1195,7 @@ R also provides functions for hypothesis testing from a population. For example,
 > # Lies, damned lies, and statistics!
 ```
 
-## Conditions, Loops, and Functions 
+## 1.17 Conditions, Loops, and Functions 
 
 As R has variables, arrays, and assignments it is perhaps not surprising to discover that it has programming functionality as well which is only introduced here. Specifically examples are given here for loops (for, repeat, while) and condition statements (if else). Knowledge of R programming is useful for writing one's own R function. 
 
@@ -1219,7 +1275,7 @@ The very short but complex function below computes Fibonacci numbers recursively
 (snip)
 ```
 
-## Graphics
+## 1.18 Graphics
 
 Most of this course has concentrated on providing the computational side to R, designed for use on the cluster. However there are also a number of graphical functions, some of which are described here. These should be tested against a local installed, not the cluster installation. Some examples include the functions plot(), points(), lines(), text(), mtext(), axis(), identify() etc. form a suite that plots points, lines and text. To see some of the possibilities that R offers, enter 
 
@@ -1286,9 +1342,9 @@ The following is a complete example of how to create a PNG file, which can be do
 ![Image of ](https://github.com/VPAC/matappprog/blob/master/chapter01/MaungaWhau.png)
 
 
-# Numerical Computations with Octave
+# 2.0 Numerical Computations with Octave
 
-## About Octave and Setup
+## 2.1 About Octave and Setup
 
 GNU Octave is a free and open source high-level software language for linear and non-linear numerical computations that is mostly compatiable with the commercial product MATLAB. An Octave program will usually run without modification on MATLAB, although the reverse is slightly less the case, as MATLAB has a larger collection of specialised and propertairy libraries. 
 
@@ -1324,7 +1380,7 @@ warning: X11 DISPLAY environment variable not set
 octave:1>
 ```
 
-## Help, Editing, and Errors
+## 2.2 Help, Editing, and Errors
 
 The command "doc" in Octave will provide an extensive manual.  If this is not installed it can be accessed through the URL: `http://www.gnu.org/software/octave/doc/interpreter/Getting-Help.html`. If the documentation is installed, the command `doc` followed by the function name will provide information concenrning that function, whereas `lookfor` followed by the function name will conduct a search for the the term.
 
@@ -1376,7 +1432,7 @@ Octave will respond with
 
 This error message has several parts, and gives you quite a bit of information to help the user locate the source of the error. The messages are generated from the point of the innermost error, and provide a traceback of enclosing expressions and function calls. 
 
-## Data and Argumentation Types
+## 2.3 Data and Argumentation Types
 
 Octave includes a number of built-in data types, including real and complex scalars and matrices, character strings, a data structure type, and an array that can contain all data types. A numeric constant may be a scalar, a vector, or a matrix, and it may contain complex values. A scalar is a single number that can be an integer, a decimal fraction, a number in scientific notation, or a complex number. By default numeric constants are represented within Octave in double-precision floating point format. A string constant consists of a sequence of characters, of any length, enclosed in either double-quote or single-quote marks. However, as the single quotation mark is also used as the transpose operator most Ocatve users consider the double quotation marks to be preferable.
 
@@ -1404,7 +1460,7 @@ octave:9> b = [a{1:4}]
 (snip)
 ```
 
-## Numerical Data Types
+## 2.4 Numerical Data Types
 
 Numerical data types in Octave may be a scalar, vector, or matrix, and may contain complex values. By default numeric constants are in double-precision floating-point format, with complex constants as pairs of double-precision floating point values. Various functions can conduct conversions between numeric data types, such as double(x) which will convert x to a double precision type. Likewise the function single(x) will convert x to a single precision type. Most of the functions in Octave accept single precision values and return single precision answers. 
 
@@ -1452,7 +1508,7 @@ octave:17> [ a 'var' ]
 ans = var
 ```
 
-## Strings
+## 2.5 Strings
 
 A string in Octave is an array of characters. Internally the string "ddddd" is actually a row vector of length 5 containing the value 100 in all places (because 100 is the ASCII code of "d"). Using a matrix of characters, it is possible to represent a collection of same-length strings in one variable. The convention used in Octave is that each row in a character matrix is a separate string, but letting each column represent a string is equally possible.
 
@@ -1499,14 +1555,16 @@ There is a variety of functions for string manipulation and conversions. Because
 
 e.g., search and replace
 
-```octave:44> quote="The quick brown fox jumps over the lazy dog"
+```
+octave:44> quote="The quick brown fox jumps over the lazy dog"
 quote = The quick brown fox jumps over the lazy dog
 octave:45> quote(quote==" ") = "_"
-quote = The_quick_brown_fox_jumps_over_the_lazy_dog```
+quote = The_quick_brown_fox_jumps_over_the_lazy_dog
+```
 
 Other functions like deblank(s) removes trailing whitespaces s, strtrim(s) removes leading and trailing whitespace, strtrunc (s, n) will truncate the string s to length n. Useful conversion functions include bin2dec(s), which will convert binary to decimal or dec2bin(s) which conducts the reverse. A more elaborate version is dec2base(s,base) which will convert a string of digits in a variable base to a decimal integer, and  dec2base(d,base) which will do the reverse. The function str2double(s) will convert a string to a real or complex number.
 
-## Simple Matrix Mathematics
+## 2.6 Simple Matrix Mathematics
  
 Like the text "MATLAB 7 Getting Started Guide" (Mathworks, 2008), this guide will illustrate the features Octave using Albrecht Dürer's magic square found in detail of the print Melencolia I. This print itself has been subject to more interpetation than almost any other uin history (indeed a two-volume study was written on it). The order-4 magic square itself was noted in other cultures, but is believed to be the first time illustrated in Europen art.
 
@@ -1539,7 +1597,7 @@ octave:7> sum(diag(fliplr(A)))
 (snip)
 ```
 
-## Variables and Operations
+## 2.7 Variables and Operations
 
 Octave can store data in variables. Sometimes these can be very simple, like a one-by-one matrix. Variables must begin with a letter or a underscore and can be followed by letters, numbers, or underscores. However, variables that begin and end with two underscores are reserved for internal use by Octave; as a result it is usually best just to start with a letter. Variables are also case-sensitive. The maximum length for a variable can be determined by invoking the function namelengthmax (63 on trifid.vpac.org), although why one would want a variable that long is moot. Note that the built-in variable ans will always contain the result of the last computation.
 
@@ -1637,7 +1695,7 @@ Finally, the function setxor returns the elements exclusive to the sets listed i
 ```octave:29> setxor(Aset,Bset)
 (snip)```
 
-## Manipulating Matrices
+## 2.8 Manipulating Matrices
 
 Matrix mathematics is the foundation of Octave. Unsurprisingly there are several ways that a matrix can be created. The function zeroes(a,b) will created matrix with zeroes assigned to all elements in cells across a,b rows and colums, the function ones(a,b) will do the same except with the value 1 assigned to the elements, rand(a,b) will do the same with uniformally distributed elements, randn(a,b) with normally distributed random elements. The range of random numbers can also have the fractional component truncuated leaving an integer. When added to a multiplier this provides a range. Martrices can, and typically are, assigned to a variable. For example to generate ten numbers from between 1 and 100;
 
@@ -1672,7 +1730,7 @@ The following is a list of some of the common functions for matrix manipulation 
 | randperm(n)	| Returns a row vector containing a random permutation of the numbers 1, 2, \ldots, n.	|
 | diag(x) or diag(A).	| For a vector, x, this returns a square matrix with the elements of x on the diagonal and 0s everywhere else. For a matrix, A, this returns a vector containing the diagonal elements of A.	|
 
-## Indexing Matrices
+## 2.9 Indexing Matrices
 
 Index expressions in Octave permit the referencing or extracting selected elements of a matrix or vector. Indices can be scalars, vectors, ranges, or the special operator ‘:’, which can be used to select entire rows or columns, or elements in order of row then column. For example, given a simple matrix, the following basic selections can be easily established.
 
@@ -1716,7 +1774,7 @@ A single element cannot be deleted from a matrix (e.g., X(1,2)=[]), because that
 
 Finally, there is the keyword `end` that can be used when indexing into a matrix or vector. It refers to the last element in the row or column (e.g., x(end-2:end)).
 
-## Polynomials
+## 2.10 Polynomials
 
 A polynomial expressions in Octave is represented by its coefficients in descending order. Consider the vector expression p:
 
@@ -1796,18 +1854,24 @@ A square matrix that is not invertible is called singular or degenerate. A squar
 
 Note that in theory A*inv(A) should return the identity matrix, but in practice, there may be some round off errors so the result may not be exact.
 
-```octave:49> inv(A)
-(snip)```
+```
+octave:49> inv(A)
+(snip)
+```
   
 In this example, rcond stands for reciprocal condition estimate. The rank of a matrix is a measure of the "nondegenerateness" of the system of linear equations and linear transformation encoded by that matrix. The command rank(A) will compute the rank of A using singular value decomposition. The rank is taken to be the number of singular values of A that are greater than the specified tolerance TOL.  If the second argument is omitted, it is taken to be tol = max (size (A)) * sigma(1) * eps, where eps is machine precision and sigma(1) is the largest singular value of A.
 
-```octave:50> rank(A)
-ans =  3```
+```
+octave:50> rank(A)
+ans =  3
+```
 
 The eigenvalues of A produce the following:
 
-```octave:51> e=eig(A)
-(snip)```
+```
+octave:51> e=eig(A)
+(snip)
+```
 
 Note that calculating the inverse is often 'not' necessary. See the next two operators as examples. Note that in theory A*inv(A) should return the identity matrix, but in practice, there may be some round off errors so the result may not be exact.
 
@@ -1818,13 +1882,17 @@ The largest eigenvalue is 34, the vector of all ones is an eigenvector.
 
 Unsurprisingly;
 
-```octave:53> A*v
-(snip)```
+```
+octave:53> A*v
+(snip)
+```
  
 The length of a vector x = (x1, x2, ... xn) in the n-dimensional real vector space R^n is usually calculated in Euclidean distance. This is famously inappropriate for taxi drivers in Manhattan, who calculate distance according the orthogonal or parallel lines. The class of p-norms is calculated as follows:   
 
-```octave:54> norm(A)
-ans =  34.000```
+```
+octave:54> norm(A)
+ans =  34.000
+```
 
 The command norm(A, p) computes the p-norm of the matrix (or vector) A. The second argument is optional with default value of p=2; the command "help norm" will give a variety of other options.
   
@@ -1851,7 +1919,7 @@ There is a small mountain of other built-in functions that Octave has available 
 | trace(A)	| computes the trace (sum of the diagonal elements) of A	|
 
 
-## Functions
+## 2.11 Functions
 
 The simple structure of a function in Octave is simply a function declation, name, body, and end of function declaration. The name of the function follows the same rules as a variable. The body will define what the function actually does. Normally, this will require an argument message to be parsed to the function after the name which is invoked from the function. If information is wanted from the function, as it is from most cases, the ret-var (return variable) is added. Multiple return values take the form of a bracketed list. There are also special parameters for variable length input argments (varargin) and return lists (varargout). As with other programming languages it is often considered good practise to assign default values to some input arguments.
 
@@ -1929,7 +1997,7 @@ It is useful to be able to save Octave commands and rerun them later on.  These 
 octave56>myscript;``
 
 
-## Global Variables, Conditions, and Loops
+## 2.12 Global Variables, Conditions, and Loops
 
 A variable may be declared and initialised as global, meaning that it can be accessed from within a function body without having to pass it as a formal parameter. It is, however, necessary declare a variable as global within a function body in order to access it.
 
@@ -2050,7 +2118,7 @@ for x = vec
 endfor
 ```
 
-## Graphics
+## 2.13 Graphics
 
 Octave provides plotting capability through GNUplot or OpenGL, with the latter being a newer addition. The function call graphics_toolkit ("fltk") selects the FLTK/OpenGL system, and graphics_toolkit ("gnuplot") selects the gnuplot system. For the following graphics examples the local machine should be used for testing purposes rather than the cluster.
 
@@ -2087,7 +2155,7 @@ plot3 (z, exp (2i*pi*z), ";complex sinusoid;");
 Finally, the print() function allows the computational side of Octave to run, but the graphics exported to a file. The examples of mandelbrot.m and sierpinski.m in the Octave directory should be reviewed, run, and the output file copied to a local directory for visualisation. 
 
 
-## Octave and MATLAB(R)
+## 2.14 Octave and MATLAB(R)
 
 Much of the syntax and behaviour of Octave is similar to MATLAB(R). The core principles - such as the use of matrices as a basic data type, support for complex numbers, extension via functions - are common to both. Nevertheless, whilst Octave is very similar to MATLAB(R) it is not quite the same.
 
@@ -2123,9 +2191,9 @@ This are just some of the examples of the differences; when transferring files b
 ```
 
 
-# Symbolic Computation with Maxima
+# 3.0 Symbolic Computation with Maxima
 
-## About Maxima and Installation
+## 3.1 About Maxima and Installation
 
 Maxima is a computer algebra system (CAS) originally based on Macsyma that is particularly useful for symbolic operations, but can also be used numerical operations. Macsyma's core design was established in 1968, and coding began in 1969. In 1982, the project was split with a commercial arm which continued in development until 1999. 
 
@@ -2200,7 +2268,7 @@ Finally, a  brief description of the application in the .desc file which associa
 Maxima is a system for the manipulation of symbolic and numerical expressions, including differentiation, integration, Taylor series, Laplace transforms, ordinary differential equations, systems of linear equations, polynomials, and sets, lists, vectors, matrices, and tensors.
 ```
 
-## Help, Editing, and Errors
+## 3.2 Help, Editing, and Errors
 
 Once installed Maxima can be invoked on the command line which will put the user in a lisp-based intrepretative shell. Commands are terminated with a semicolon with notation to differentiate between user input and program output. Help is not invoked with the `help` command but rather with `describe(topic)`, `example(topic)` or `? topic`, for each function. The command `apropos` will search flags and functions with a particular string. A demonstration of functions can be invoked by the `demonstrate (topic)` command. To quit an interactive session use the `quit()` function.
 
@@ -2335,7 +2403,7 @@ The `playback()` function displays input, output, and intermediate expressions, 
 (%o10) quit();
 ```
 
-## Operators, Expressions, and Data
+## 3.3 Operators and Expressions 
 
 Whilst Maxima is primarily designed for symbolic computation it can also do numeric computations with arbitrary precision and size determined by the computers hardware. The usual operations can be conducted with `+` (addition), `\` (division), `*` (multiplication), `^` (exponent), and `!` (factorials). Maxima uses the standard order of operations, with primacy given to equations in parantheses. 
 
@@ -2448,6 +2516,9 @@ The `rationlise()` function will convert all double floats and big floats in an 
                        36028797018963968    562949953421312
 ```
 
+
+## 3.4 Datatypes
+
 Maxima draws a distinction between its numerical, symbolic, and string data types. Strings are represented as double-quoted character sequences, and can include any characters (including tabs, newlines, carriage returns etc), with the backslash as an escape metacharacter to display values such as the literal double-quote. Note that there is a no type 'character' in Maxima - this would be a string of one-character length.
 
 The concat() function concatanes arguements and evaluates to atomic components. The return value is a symbol if the first argument is a symbol and a string otherwise. The single quote prevents evaluation. 
@@ -2549,7 +2620,7 @@ factors_of_order), vortoj(unu, du, tri, kvar, kvin)]
 (%i50) quit();
 ```
 
-## Plots and Files
+## 3.5 Plots and Files
 	
 A highly pleasing feature of Maxima is its strong integration with gnuplot and thus the inclusion of X11 libraries. This means, unlike a lot of applications, it is simple and secure to forward graphical output from an standard Linux HPC system. Usually an HPC system strongly recommends that visualisation is conducted via local machines whilst computation is conducted on the HPC system. One of the main issues that X11 by itself does not isolate applications from each other, and that the drivers are usually run as the root user (so they can access the hardware). Combined this introduces an interesting security risk which naturally enough makes HPC sysadmins justifiably nervous.
 
@@ -2628,7 +2699,7 @@ The roots of x^4 + x -1 are  [x = (- 1.204387239234341
 (%i10)
 ```
 
-## Polynominals
+## 3.6 Polynominals
 
 Polynomials are stored in Maxima in two ways; either as General Form or as Canonical Rational Expressions (CRE). The latter represents is particularly suitable for expanded polynominials and rational functions. As always, this is only a small selection of the specialist functions available in Maxima for polynominals, but it does include the most common cases. 
 
@@ -2712,7 +2783,7 @@ The `factor()` function in Maxima requires some attention. By itself it factions
 In addition to this however, there are a number of variables and other functions which the factor function uses to determine its behaviour. For example, factor uses the `ifactors()` function when factoring integers. The following also illustrates a simple check.
 
 ```
-(%i16) factor (2^32-1);              
+(%i16) factor (2^32-1);
 (%o16)                         3 5 17 257 65537
 (%i25) 2^32-1;
 (%o25)                            4294967295
@@ -2721,12 +2792,59 @@ In addition to this however, there are a number of variables and other functions
 
 ```
 
+An optional variable, `factorflag` is set to false by default, This suppresses the factoring of integer factors of rational expressions. In contrast, the optional variable `berlefact` is set to true by default, which uses the the Berlekamp algorithm for factoring algorithms, as the name indicates. If it is set to false, then the Kronecker algorithm is used instead. The optional variable `savefactors` is also set to true by default. This causes the factors of an expression that is a product of factors to be saved by some functions in order to speed up later factorisations of expressions containing some of the same factors. 
+
+The function `factorout()`, consists of an expression and two or values as parameters. As the name indicates, the function rearranges the sum of the expression into the sum of the terms (x_1, x_2, ...)*g, where g is the product of expressions not containing any x_i and f is factored. The optional variable keepfloat is ignored by factorout.
+
+```
+(%i25) expand (a*(x+1)*(x-1)*(u+1)^2);
+                2  2          2      2      2
+(%o25)     a u  x  + 2 a u x  + a x  - a u  - 2 a u - a
+(%i26) factorout(%,x);
+             2
+(%o26) a u  (x - 1) (x + 1) + 2 a u (x - 1) (x + 1)
+                                                  + a (x - 1) (x + 1)
+```
+
+The related function `factorsum()` takes an expression as a parameter and groups terms in factors of that expression which are sums in groups of terms, as long as their sum is factorable. For example `factorsum()` can recover the result of `expand ((x + y)^2 + (z + w)^2)` but it can't recover expand `((x + 1)^2 + (x + y)^2)` because the terms have variables in common.
+
+```
+(%i27) expand ((x + 1)*((u + v)^2 + a*(w + z)^2));
+               2      2                            2      2
+(%o28) a x z  + a z  + 2 a w x z + 2 a w z + a w  x + v  x
+
+                                         2        2    2            2
+                            + 2 u v x + u  x + a w  + v  + 2 u v + u
+(%i29) factorsum (%);
+                                       2          2
+(%o29)            (x + 1) (a (z + w)  + (v + u) )
+```
+
+The fuction `gfactor()` takes factors a polynomial expression parameter over Gaussian integers (that is, the integers with the imaginary unit %i adjoined). This is like factor (expr, a^2+1) where a is %i. The `gcfactor()` function factors a Gaussian integer as a parameter over the Gaussian integers, i.e., numbers of the form a + b %i where a and b are rational integers (i.e., ordinary integers). Factors are normalized by making a and b non-negative. The function `gfactorsum()` is essentially the same as the `factorsum` function but applies `gfactor()` of `factor()`.
+
+```
+(%i30) gfactor (x^4 - 1);
+(%o30)           (x - 1) (x + 1) (x - %i) (x + %i)
+```
+
+Finally, the `dontfactor` identifier is set to a list of variables in a block in which factoring is not to occur; by default is an empty set. 
+
+```
+(%i25) block ([dontfactor: [x]], factor (%/36/(1 + 2*y + y^2)));
+                      2
+                     (x  + 2 x + 1) (y - 1)
+(%o25)                ----------------------
+                           36 (y + 1)
+```
 
 
-## Special and Elliptic Functions
 
-## Differentiation, Integration, and Differential Equations
 
-### Matrices and Linear Equations
+## 3.7 Special and Elliptic Functions
 
+## 3.8 Differentiation, Integration, and Differential Equations
+
+## 3.9 Matrices and Linear Equations
+
+## 3.10 Programming Maxima
 
