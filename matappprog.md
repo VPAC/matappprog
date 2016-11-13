@@ -1,5 +1,22 @@
 # Mathematical Applications and Programming: R, Octave, and Maxima
 
+by Lev Lafayette
+
+ISBN-10: 
+
+ISBN-13: 978-0-9943373-2-0
+
+Mathematical Applications and Programming: R, Octave, and Maxima by Lev Lafayette, 2015
+
+Published by the Victorian Partnership for Advanced Computing (trading as V3 Alliance) .
+
+Cover art composed by Michael D'Silva, featuring several clusters operated by the Victorian Partnership for Advanced Computing.
+
+Mathematical Applications and Programming: R, Octave, and Maxima, is licensed under a Creative Commons Attribution 4.0 International License. 
+
+All trademarks are property of their respective owners.
+
+
 ## Table of Contents
 
 0.0 Introduction
@@ -169,7 +186,7 @@ This will often include the helpful information:
 
 `Type 'vignette("FOO", package="PKG")' to inspect entries 'PKG::FOO'.`
 
-Often HPC systems are deliberately designed not have a pre-installed x-windows environment, for a number of resource and security reasons. TO view binary documents they should be copied to a local machines (e.g., by using scp, Filezilla etc) for viewing.
+Often HPC systems are deliberately designed not have a pre-installed x-windows environment, for a number of resource and security reasons. To view binary documents they should be copied to a local machines (e.g., by using scp, Filezilla etc) for viewing.
 
 ```
 > vignette("sandwich", package="sandwich")
@@ -1259,13 +1276,17 @@ The following is an example of approximately converting miles to kilometers.
 
 The return value is the value of the final (and in this instance only) expression that appears in the function body. Use the function thus
 
-```> miles.to.km(175)  # Approximate distance to Sydney, in miles
-[1] 280```
+```
+> miles.to.km(175)  # Approximate distance to Sydney, in miles
+[1] 280
+```
 
 The function will do the conversion for several distances all at once. To convert a vector of the three distances 100, 200 and 300 miles to distances in kilometers, specify:
 
-```> miles.to.km(c(100,200,300))
-[1] 160 320 480```
+```
+> miles.to.km(c(100,200,300))
+[1] 160 320 480
+```
 
 The very short but complex function below computes Fibonacci numbers recursively. 
 
@@ -2837,14 +2858,458 @@ Finally, the `dontfactor` identifier is set to a list of variables in a block in
                            36 (y + 1)
 ```
 
-
-
-
 ## 3.7 Special and Elliptic Functions
+
+There are a number of function groups that Maxima defines as "special". This includes four Bessel functions and several exponential integral functions. A number of related functions (e.g., Hankel functions) are not elaborated at this point. In addition, Maxima provides support for the manipulation and numerical evaluation of Jacobian elliptic functions for complete and incomplete integrals.
+
+Bessel functions provide solutions of a differential equation for complex numbers. Bessel's equation finds separable solutions to Laplace's equation and the Helmholt equation in cylindrical or spherical coordinates and are therefore  especially important for many problems of wave propagation and static potentials. The four Bessel functions in Maxima are `bessel_j (index, expr)`, `bessel_y (index, expr)`, `bessel_i (index, expr)`, and `bessel_k (index, expr)`. 
+
+The function `bessel_j()` takes the first kind of order `index` (v) and applies the argument `expr` (z) as parameters in the following:
+
+```
+                inf
+                ====       k  - v - 2 k  v + 2 k
+                \     (- 1)  2          z
+                 >    --------------------------
+                /        k! gamma(v + k + 1)
+                ====
+                k = 0
+```
+
+
+The function `bessel_i()` is modified version of `bessel_j()`, takes the first kind of order `index` (`v`) and applies the argument `expr` (`z`) as parameters in the following:
+
+```
+                    inf
+                    ====   - v - 2 k  v + 2 k
+                    \     2          z
+                     >    -------------------
+                    /     k! gamma(v + k + 1)
+                    ====
+                    k = 0
+```
+
+
+In both functions the infinite series is not used for computations.
+
+In addition to these 'Bessel functions of the first kind', there are 'Bessel functions of the second kind' being `bessel_y()` and the variant `bessel_k()`
+
+As above, the function bessel_y is defined as:
+
+```
+              cos(%pi v) bessel_j(v, z) - bessel_j(-v, z)
+              -------------------------------------------
+                             sin(%pi v)
+```
+
+Whereas the variant function `bessel_k()` is defined as:
+
+```
+           %pi csc(%pi v) (bessel_i(-v, z) - bessel_i(v, z))
+           -------------------------------------------------
+```                                  2
+
+In both cases when `v` is not an integer. If `v` is an integer `n`, then the limit as `v` approaches `n` is taken. 
+
+In addition to these there is the optional variable `besselexpand` which is set to `false` by default. This controls the expansion of Bessel functions when the order is half of an odd integrer, which can be expanded into other elementary functions when the `basselexpand` is true. e.g.,
+
+
+```
+(%i1) besselexpand: false$
+
+(%i2) bessel_j (3/2, z);
+                                         3
+(%o2)                           bessel_j(-, z)
+                                         2
+(%i3) besselexpand: true$
+
+(%i4) bessel_j (3/2, z);
+                                        sin(z)   cos(z)
+                       sqrt(2) sqrt(z) (------ - ------)
+                                           2       z
+                                          z
+(%o4)                  ---------------------------------
+                                   sqrt(%pi)
+```
+
+Exponential integrals include the following:
+
+```
+expintegral_e (v,z)            Exponential integral E
+expintegral_e1 (z)             Exponential integral E1
+expintegral_ei (z)             Exponential integral Ei
+expintegral_li (z)             Logarithmic integral Li
+expintegral_si (z)             Exponential integral Si
+expintegral_ci (z)             Exponential integral Ci
+expintegral_shi (z)            Exponential integral Shi
+expintegral_chi (z)            Exponential integral Chi
+```
+
+An elliptic function in complex analysis is a meromorphic function that is periodic in two directions. Where periodic function of a real variable is defined by its values on an interval, an elliptic function is determined by its values on a fundamental parallelogram, which then repeat in a lattice. In Maxima, all elliptic functions and integrals use the parameter `m`. The elliptic functions and integrals are primarily intended to support symbolic computation, therefore, most of derivatives of the functions and integrals are known. However, if floating-point values are given, a floating-point result is returned.
+
+Some examples of elliptic functions include:
+
+```
+(%i1) jacobi_sn (u, m);
+(%o1)                    jacobi_sn(u, m)
+(%i2) jacobi_sn (u, 1);
+(%o2)                        tanh(u)
+(%i3) jacobi_sn (u, 0);
+(%o3)                        sin(u)
+(%i4) diff (jacobi_sn (u, m), u);
+(%o4)            jacobi_cn(u, m) jacobi_dn(u, m)
+(%i5) diff (jacobi_sn (u, m), m);
+(%o9) 
+                                     elliptic_e(asin(jacobi_sn(u, m)), m)
+jacobi_cn(u, m) jacobi_dn(u, m) (u - ------------------------------------)
+                                                    1 - m
+--------------------------------------------------------------------------
+                                   2 m
+            2
+   jacobi_cn (u, m) jacobi_sn(u, m)
+ + --------------------------------
+              2 (1 - m)
+```
+
+
+Some examples of elliptic integrals:
+
+```
+(%i1) elliptic_f (phi, m);
+(%o1)                  elliptic_f(phi, m)
+(%i2) elliptic_f (phi, 0);
+(%o2)                          phi
+(%i3) elliptic_f (phi, 1);
+                               phi   %pi
+(%o3)                  log(tan(--- + ---))
+                                2     4
+(%i13) elliptic_e (phi, 1);
+                                    phi
+(%o13)                      2 round(---) + sin(phi)
+                                    %pi
+(%i5) elliptic_e (phi, 0);
+(%o5)                          phi
+(%i15) elliptic_kc (1/2);
+                                       3/2
+                                    %pi
+(%o15)                            -----------
+                                         2 3
+                                  2 gamma (-)
+                                          4
+
+(%i16) makegamma (%);
+                                       3/2
+                                    %pi
+(%o16)                            -----------
+                                         2 3
+                                  2 gamma (-)
+                                           4
+(%i8) diff (elliptic_f (phi, m), phi);
+                                1
+(%o8)                 ---------------------
+                                    2
+                      sqrt(1 - m sin (phi))
+
+(%i18) diff (elliptic_f (phi, m), m);
+       elliptic_e(phi, m) - (1 - m) elliptic_f(phi, m)     cos(phi) sin(phi)
+       ----------------------------------------------- - ---------------------
+                              m                                        2
+                                                         sqrt(1 - m sin (phi))
+(%o18) -----------------------------------------------------------------------
+                                      2 (1 - m)
+```
 
 ## 3.8 Differentiation, Integration, and Differential Equations
 
+Differentiation is the procedure for finding a derivative. A derivative measures the sensitivity to change of a quantity (known as the function value or dependent variable), determined by another quantity (known as the independent variable). As the process of finding a direvative is differentiation, the reverse process is antidifferentiation. The fundamental theorem of calculus states that antidifferentiation is the same as integration.
+
+Maxima has several functions and options for differentiation, integration, and differential equations. For the former the major functions and symbols are `diff()`, `antidiff()`, `antid()`,  `diff()`, and `depends`. For integration, the `integrate()` function is certainly the most important. Although there is also a number of adaptive integrators from QUADPACK for numerical analysis, originating from a joint project with R.  For some specific types of first and second-order equations there are different functions, especially `desolve()` and `ode2()`. For
+numerical solutions see the see the additional package `dynamics`.
+
+The `diff()` function returns the derivative or differential of `expr` with respect to some or all variables in `expr`. For example `diff (expr, x, n)` returns the n'th derivative of expr with respect to x, whereas `diff (expr, x_1, n_1, ..., x_m, n_m)` returns the mixed partial derivative of `expr` with respect to `x_1,..., x_m`. The noun form of diff is required in some contexts, such as stating a differential equation. 
+
+The `antidiff (expr, x, u(x))` function returns an antiderivative of `expr` with respect to `x`. The expression expr may contain an unknown function `u` and its derivatives. If `antidiff()` succeeds, the resulting expression is free of integral signs. Otherwise, `antidiff()` returns an expression which is partly or entirely within an integral sign. If antidiff cannot make any progress, the return value is entirely within an integral sign. The `load ("antid")` loads this function. The `antidiff()` function is related to the `antid()`. Let L, a list of two elements, be the return value of `antid()`. Then the return value of antidiff is equal to L[1] + 'integrate (L[2], x) where x is the variable of integration.
+
+The `antid(expr, x, u(x))` function returns a two-element list where an antideriviative of `expr` from `x` can be constucted from the list; `expr` can include an unknown function `u` and its deriviatived. If `antid()` succeeds entirely, the second element of the return value is zero. Otherwise, the second element is nonzero, and the first element is nonzero or zero. If `antid()` cannot progress, the first element is zero and the second nonzero. The command `load ("antid")` loads this function.
+
+An example of the three functions follows:
+
+```
+    (%i1) load ("antid")$
+    (%i2) expr: exp (z(x)) * diff (z(x), x) * y(x);
+                                z(x)  d
+    (%o2)                y(x) %e     (-- (z(x)))
+                                      dx
+    (%i3) a1: antid (expr, x, z(x));
+                           z(x)      z(x)  d
+    (%o3)          [y(x) %e    , - %e     (-- (y(x)))]
+                                           dx
+    (%i4) a2: antidiff (expr, x, z(x));
+                                /
+                         z(x)   [   z(x)  d
+    (%o4)         y(x) %e     - I %e     (-- (y(x))) dx
+                                ]         dx
+                                /
+    (%i5) a2 - (first (a1) + 'integrate (second (a1), x));
+    (%o5)                           0
+    (%i6) antid (expr, x, y(x));
+                                 z(x)  d
+    (%o6)             [0, y(x) %e     (-- (z(x)))]
+                                       dx
+    (%i7) antidiff (expr, x, y(x));
+                      /
+                      [        z(x)  d
+    (%o7)             I y(x) %e     (-- (z(x))) dx
+                      ]              dx
+                      /
+```
+
+The `depends()` function declares dependencies for computing derivatives. If there is no declared dependence, `diff (f, x)` yields zero. If `depends (f, x)` is declared, `diff (f, x)` yields a symbolic derivative. Each argument in `depends()` can be the name of a variable or array, or a list of names. The function `diff()` recognises indirect dependencies established by depends and applies the chain rule in these cases. The function `depends()` returns a list of the dependencies established. The dependencies are appended to the global variable dependencies. The function `diff()` is the only Maxima command which recognises dependencies established by `depends()`. Other functions only recognize dependencies explicitly represented by their arguments.
+
+The `integrate(expr, x, a, b)` functions attempts to symbolically compute the integral of `expr` with respect to `x`. When presented as `integrate (expr, x)` it is an indefinite integral, while `integrate (expr, x, a, b)` is a definite integral, with limits of integration `a` and `b`. The limits should not contain `x`, although integrate does not enforce this restriction. Also `a` need not be less than `b`. If `b` is equal to `a`, integrate returns zero. The integral (an expression free of integrate) is returned if integrate succeeds. The `integrate()` function handles definite integrals separately from indefinite, and employs a range of heuristics to handle each case. Special cases of definite integrals include limits of integration equal to zero or infinity (`inf` or `minf`), trigonometric functions with limits of integration equal to zero and %pi or 2 %pi, rational functions, integrals related to the definitions of the beta and psi functions, and some logarithmic and trigonometric integrals. 
+
+
+Some examples follow:
+
+
+```
+        (%i1) integrate (sin(x)^3, x);
+                                   3
+                                cos (x)
+        (%o1)                   ------- - cos(x)
+                                   3
+        (%i2) integrate (x/ sqrt (b^2 - x^2), x);
+                                         2    2
+        (%o2)                    - sqrt(b  - x )
+        (%i3) integrate (cos(x)^2 * exp(x), x, 0, %pi);
+                                       %pi
+                                   3 %e      3
+        (%o3)                      ------- - -
+                                      5      5
+        (%i4) integrate (x^2 * exp(-x^2), x, minf, inf);
+                                    sqrt(%pi)
+        (%o4)                       ---------
+                                        2
+```
+
+The `desolve()` function solves systems of linear ordinary differential equations using Laplace transform. The equations are differential equations in the dependent variables `x_1, ..., x_n`. The functional dependence of `x_1, ..., x_n` on an independent variable, for instance `x`, must be explicitly indicated in the variables and its derivatives. For example:
+
+`'diff(f(x),x,2) = sin(x) + 'diff(g(x),x);`
+`'diff(f(x),x) + x^2 - f(x) = 2*'diff(g(x),x,2);`
+
+The call to the function desolve would then be
+
+`desolve([eqn_1, eqn_2], [f(x),g(x)]);`
+
+If initial conditions at x=0 are known, they can be supplied before calling desolve by using atvalue. 
+
+If desolve cannot obtain a solution, it returns false.
+
+```
+(%i1) 'diff(f(x),x)='diff(g(x),x)+sin(x);
+                 d           d
+(%o1)            -- (f(x)) = -- (g(x)) + sin(x)
+                 dx          dx
+(%i2) 'diff(g(x),x,2)='diff(f(x),x)-cos(x);
+                  2
+                 d            d
+(%o2)            --- (g(x)) = -- (f(x)) - cos(x)
+                   2          dx
+                 dx
+(%i3) atvalue('diff(g(x),x),x=0,a);
+(%o3)                           a
+(%i4) atvalue(f(x),x=0,1);
+(%o4)                           1
+(%i5) desolve([%o1,%o2],[f(x),g(x)]);
+                  x
+(%o5) [f(x) = a %e  - a + 1, g(x) = 
+
+                                                x
+                                   cos(x) + a %e  - a + g(0) - 1]
+(%i6) [%o1,%o2],%o5,diff;
+             x       x      x                x
+(%o6)   [a %e  = a %e , a %e  - cos(x) = a %e  - cos(x)]
+```
+
+The `ode2()` function solves solves an ordinary differential equation (ODE) of first or second order. It takes three parameters: an ODE given by equation, the dependent variable `dvar`, and the independent variable `ivar`. If successful, it returns either an explicit or implicit solution for the dependent variable. The dependence of the dependent variable on the independent variable does not have to be written explicitly, as in the case of `desolve()`, but the independent variable must always be given as the third argument. If ode2 cannot obtain a solution for whatever reason, it returns false. 
+
+```
+    (%i1) x^2*'diff(y,x) + 3*y*x = sin(x)/x;
+                          2 dy           sin(x)
+    (%o1)                x  -- + 3 x y = ------
+                            dx             x
+    (%i2) ode2(%,y,x);
+                                 %c - cos(x)
+    (%o2)                    y = -----------
+                                      3
+                                     x
+    (%i3) ic1(%o2,x=%pi,y=0);
+                                  cos(x) + 1
+    (%o3)                   y = - ----------
+                                       3
+                                      x
+    (%i4) 'diff(y,x,2) + y*'diff(y,x)^3 = 0;
+                             2
+                            d y      dy 3
+    (%o4)                   --- + y (--)  = 0
+                              2      dx
+                            dx
+    (%i5) ode2(%,y,x);
+                          3
+                         y  + 6 %k1 y
+    (%o5)                ------------ = x + %k2
+                              6
+    (%i6) ratsimp(ic2(%o5,x=0,y=0,'diff(y,x)=2));
+                                 3
+                              2 y  - 3 y
+    (%o6)                   - ---------- = x
+                                  6
+    (%i7) bc2(%o5,x=0,y=1,x=1,y=3);
+                             3
+                            y  - 10 y       3
+    (%o7)                   --------- = x - -
+                                6           2
+```
+
+
 ## 3.9 Matrices and Linear Equations
+
+Whilst the recommendation for matrix mathematics in this book is certainly to use a product like Octave, there is a certain flexibility in Maxima which means that short consideration of its ability to handle matrices must be reviewed. Of initial note is the dot operator `.`, used in Maxima for noncommunicative multipication and scalar products. If the operands are 1-column or 1-row matrices `a` and `b`, the expression `a.b` is equivalent to `sum (a[i]*b[i], i, 1, length(a))`. When the operands are more general matrices, the product is the matrix product `a` and `b`. The number of rows of b must equal the number of columns of `a`, and the result has number of rows equal to the number of rows of a and number of columns equal to the number of columns of `b`. The dot operator is often distinguished from the decimal point by spaces by convention e.g., For example, 5.e3 is 5000.0 but 5 . e3 is 5 times e3.
+
+Two packages of functions are also used in Maxima for martices, `vect` and `eigen`. As the name indicates the forms is package of vector analysis functions, which can be invoked by `load ("vect")`, whereas the latter contains several functions devoted to the symbolic computation of eigenvalues and eigenvectors. It may be loaded explicitly with `load ("eigen")` or is loaded automatically when if one the functions `eigenvalues()` or `eigenvectors()` is invoked. The `vect` package contains five functions: `vectorsimp()`, `scalefactors()`, `express()`, `potential()`, and `vectorpotential()`. The functions in the `eigen` package are: `innerproduct()`, `unitvector()`, `columnvector()`, `gramschmidt()`, `eigenvalues()`, `eigenvectors()`, `uniteigenvectors()`, and `similaritytransform()`. 
+
+For example, the `eigenvectors (M)` (`eivects (M)`) function calculates the eigenvectors of the matrix `M` and returns a list of two elements. The first being is a list of the eigenvalues of `M` and a list of the multiplicities of the eigenvalues. The second is a list of lists of eigenvectors. There is one list of eigenvectors for each eigenvalue. There may be one or more eigenvectors in each list. The function `eigenvalues (M)` (or its abbreviated form `eivals (M)`) returns a list of two lists containing the eigenvalues of the matrix `M`. The first sublist of the return value is the list of eigenvalues of the matrix, and the second sublist is the list of the multiplicities of the eigenvalues in their corresponding order. Also requiring the `load ("eigen")` package, the `columnvector(L)` (or `covect (L)`) function returns a matrix of one column and length (L) rows, containing the elements of the list L.
+
+In addition to these there are several basic functions which are preloaded and available for matricies and linear algebra. The function `addcol (M, list_1, ..., list_n)` will appends the columns given by the one or more lists (or matrices) onto the matrix `M`. The function `addrow (M, list_1, ... , list_n)`, will, as the name indicates, carry out the same behaviour but by adding rows. The `adjoint (M)` function will returns the adjoint of the matrix `M`, the transpose of the matrix of cofactors of M. 
+
+As a selection function `col (M, i)` which returns the i'th column of the matrix `M`; the return value is also a matrix. Unsurprisingly, there is also a `row (M, i)` function which returns the i'th row of the matrix `M`. The return value is also a matrix. The `list_matrix_entries (M)` returns a list containing the elements of the matrix M.
+
+```
+(%i1) list_matrix_entries(matrix([a,b],[c,d]));
+(%o1)                     [a, b, c, d]
+```
+
+A submatrix can also be created with the function `submatrix (i_1,..., i_m, M, j_1,..., j_n) ` which returns a new matrix composed of the matrix `M` with rows `i_1,.., i_m` and columns `j_1,..., j_n` deleted. The `transpose(M)` function, will return the transpose of M; If M is a matrix, the return value is another matrix `N` such that `N[i,j] = M[j,i]`.
+
+Selection and creation functions also include the onerous `entermatrix (m, n)`, which returns an `m` by `n` matrix, reading the elements interactively. If `n` is equal to `m`, Maxima prompts for the type of the matrix (diagonal, symmetric, antisymmetric, or general) and for each element. Each response is terminated by a semicolon `;` or dollar sign `$`. If n is not equal to m, Maxima prompts for each element. The `matrix()` function, as an alternative, creates a matrix which has the rows `row_1, …, row_n`. The operations, + (addition), - (subtraction), * (multiplication), and / (division), are carried out element by element when the operands are two matrices. The operation ^ (exponentiation, or **) is not carried if the operands are two matrices. All operations are normally carried out in full, including `.` (noncommutative multiplication). An alternative for populating the elements at a latter date is the `zeromatrix (m, n)` function, which creates an `m` by `n` matrix, whose elements are all zero.
+
+For example, creation of a matrix from a list:
+
+```
+(%i1) x: matrix ([17, 3], [-8, 11]);
+                           [ 17   3  ]
+(%o1)                      [         ]
+                           [ - 8  11 ]
+(%i2) y: matrix ([%pi, %e], [a, b]);
+                           [ %pi  %e ]
+(%o2)                      [         ]
+                           [  a   b  ]
+```
+
+The ` genmatrix (a, i_2, j_2, i_1, j_1)` function returns a matrix generated from `a`, taking element `a[i_1, j_1]` as the upper-left element and `a[i_2, j_2]` as the lower-right element of the matrix, where `a` is a declared array (created by `array()` but not by `make_array()`) or an undeclared array, or an array function, or a lambda expression of two arguments. If `j_1` is omitted, it is assumed equal to `i_1`. If both `j_1` and `i_1` are omitted, both are assumed equal to 1.
+
+To make a copy of a matrix, the `copymatrix (M)` function returns a copy of the matrix `M`. This is the only way to make a copy of a matrix apart from copying M element by element. An assignment of one matrix to another, as in `m2: m1`, does not copy m1. An assignment `m2 [i,j]: x` or `setelmx(x, i, j, m2)` also modifies `m1 [i,j]`. Creating a copy with copymatrix and then using assignment creates a separate, modified copy. 
+
 
 ## 3.10 Programming Maxima
 
+Maxima is written in Lisp and as a result it easy to access Lisp functions and variables from Maxima and vice versa. The assumption here is that those interested in programming Maxima are already familiar with Lisp - if not they'll need to be! This section deals only with the integration and special conventions that Maxima uses within Lisp. For example, Lisp and Maxima symbols are distinguished by naming conventions. A Lisp symbol which begins with a dollar sign `$` corresponds to a Maxima symbol without the dollar sign, whereas a Maxima symbol which begins with a question mark `?` corresponds to a Lisp symbol without the question mark. The hyphen `-`, asterisk `*`, or other special characters in Lisp symbols must be escaped by backslash `\` where they appear in Maxima code. 
+
+Lisp code may be executed from within a Maxima session. A single line of Lisp (containing one or more forms) may be executed by the special command :lisp. For example, to calls the Lisp function `foo` with Maxima variables `x` and `y` as arguments. The `:lisp` construct can appear at the interactive prompt or in a file processed by batch or demo, but not in a file processed by `load`, `batchload`, `translate_file`, or `compile_file`.
+
+`(%i1) :lisp (foo $x $y)`
+
+The function `to_lisp` opens an interactive Lisp session. Entering `(to-maxima)` closes the Lisp session and returns to Maxima. If Lisp functions and variables are to be visible in Maxima as functions and variables they must use with ordinary names (i.e., no special punctuation) and must have Lisp names beginning with the dollar sign $. In addition, Maxima is case-sensitive, distinguishing between lowercase and uppercase letters in identifiers. Therefore are some rules governing the translation of names between Lisp and Maxima.
+
+* A Lisp identifier not enclosed in vertical bars corresponds to a Maxima identifier in lowercase. Whether the Lisp identifier is uppercase, lowercase, or mixed case, is ignored. E.g., Lisp `$foo`, `$FOO`, and `$Foo` all correspond to Maxima `foo`. This is because `$foo`, `$FOO` and `$Foo` are converted by the Lisp reader by default to the Lisp symbol `$FOO`.
+* A Lisp identifier which is all uppercase or all lowercase and enclosed in vertical bars corresponds to a Maxima identifier with case reversed. That is, uppercase is changed to lowercase and lowercase to uppercase. E.g., Lisp `|$FOO|` and `|$foo|` correspond to Maxima `foo` and `FOO`.
+* A Lisp identifier which is mixed uppercase and lowercase and enclosed in vertical bars corresponds to a Maxima identifier with the same case. E.g., Lisp `|$Foo|` corresponds to Maxima `Foo`. 
+
+The `#$ Lisp` macro allows the use of Maxima expressions in Lisp code and `#$expr$` expands to a Lisp expression equivalent to the Maxima expression expr. The Lisp function `displa` prints an expression in Maxima format.
+
+```
+(%i1) :lisp #$[x, y, z]$ 
+((MLIST SIMP) $X $Y $Z)
+(%i1) :lisp (displa '((MLIST SIMP) $X $Y $Z))
+[x, y, z]
+NIL
+```
+
+Functions defined in Maxima are not ordinary Lisp functions. The Lisp function `mfuncall` calls a Maxima function. For example:
+
+```
+(%i1) foo(x,y) := x*y$
+(%i2) :lisp (mfuncall '$foo 'a 'b)
+((MTIMES SIMP) A B)
+```
+
+Maxima provides a `do` loop for iteration. There are three variants of `do` that differ only in their terminating conditions, which are similar to other programming languages. They are:
+
+* for variable: initial_value, step increment, to limit do body
+* for variable: initial_value, step increment, while condition do body
+* for variable: initial_value, step increment, unless condition do body 
+
+```
+(%i1) for a:-3 thru 26 step 7 do display(a)$
+                             a = - 3
+
+                              a = 4
+
+                             a = 11
+
+                             a = 18
+
+                             a = 25
+
+(%i1) s: 0$
+(%i2) for i: 1 while i <= 10 do s: s+i;
+(%o2)                         done
+(%i3) s;
+(%o3)                          55
+```
+
+A `return()` may be used to explicity break from a current block bringing its argument, comparable to other programming languages. However in Maxima the `return()` only returns from the current block, not from the entire function it was called in. In this aspect it more closely resembles the break statement from C.
+
+```
+    (%i1) for i:1 thru 10 do o:i;
+    (%o1)                         done
+    (%i2) for i:1 thru 10 do if i=3 then return(i);
+    (%o2)                           3
+    (%i3) for i:1 thru 10 do
+        (
+            block([i],
+                i:3,
+                return(i)
+            ),
+            return(8)
+        );
+    (%o3)                           8
+    (%i4) block([i],
+        i:4,
+        block([o],
+            o:5,
+            return(o)
+        ),
+        return(i),
+        return(10)
+     );
+    (%o4)                           4
+```
+
+Conditional evaluations are carried out with the special operator `if`, which takes the general form: `if cond_1 then expr_1 else expr_0` evaluates to `expr_1 if cond_1` evaluates to true, otherwise the expression evaluates to `expr_0`. The command `if cond_1 then expr_1 elseif cond_2 then expr_2 elseif ... else expr_0` evaluates to `expr_k` if `cond_k` is true and all preceding conditions are false. If none of the conditions are true, the expression evaluates to `expr_0`. A trailing `else` false is assumed if else is missing. The alternatives `expr_0, ..., expr_n` may be any Maxima expressions, including nested `if` expressions. The conditions `cond_1,..., cond_n` are expressions which potentially or actually evaluate to true or false. When a condition does not actually evaluate to true or false, the behavior of if is governed by the global flag `prederror`. Common symbolic expressions are used for conditional statements:
+
+|-------------------------|---------------|---------------------|
+|: Operation		  |: Symbol	  |: Type               |
+|-------------------------|---------------|---------------------|
+| less than 		  | <		  | relational infix    |
+| less than or equal to   | <=  	  | relational infix    |
+| equality (syntactic)    | =             | relational infix    |
+| negation of =           | #             | relational infix    |
+| equality (value)        | equal         | relational function |
+| negation of equal       | notequal      | relational function |
+| greater than or equal to| >=	          | relational infix    |
+| greater than            | >             | relational infix    |
+| and 	                  | and           | logical infix       |
+| or                      | or            | logical infix       |
+| not                     | not           | logical prefix      |
+|-------------------------|---------------|---------------------|
