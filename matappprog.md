@@ -1,4 +1,4 @@
-# Mathematical Applications and Programming: R, Octave, and Maxima
+# Mathematical Applications and Programming: R, Octave, Maxima, and Gretl
 
 by Lev Lafayette
 
@@ -6,13 +6,13 @@ ISBN-10:
 
 ISBN-13: 978-0-9943373-2-0
 
-Mathematical Applications and Programming: R, Octave, and Maxima by Lev Lafayette, 2015
+Mathematical Applications and Programming: R, Octave, Maxima and Gretl by Lev Lafayette, 2015
 
 Published by the Victorian Partnership for Advanced Computing (trading as V3 Alliance) .
 
 Cover art composed by Michael D'Silva, featuring several clusters operated by the Victorian Partnership for Advanced Computing.
 
-Mathematical Applications and Programming: R, Octave, and Maxima, is licensed under a Creative Commons Attribution 4.0 International License. 
+"Mathematical Applications and Programming: R, Octave, Maxima, and gretl" is licensed under a Creative Commons Attribution 4.0 International License. 
 
 All trademarks are property of their respective owners.
 
@@ -70,6 +70,9 @@ All trademarks are property of their respective owners.
 3.8 Differentiation, Integration, and Differential Equations
 3.9 Matrices and Linear Equations
 3.10 Programming Maxima
+
+4.0 Econometrics with Gretl
+
 
 # 0.0 Introduction
 
@@ -3313,3 +3316,42 @@ Conditional evaluations are carried out with the special operator `if`, which ta
 | or                      | or            | logical infix       |
 | not                     | not           | logical prefix      |
 |-------------------------|---------------|---------------------|
+
+
+
+# 4.0 Econometris with Gretl
+
+## 4.1 About gretl and Installation
+
+The Gnu Regression, Econometrics and Time-series Library (gretl, or sometimes Gretl for ease) is an free and open-source econometrics package written in C with a shared library that cna be accessed either through a command-line client (gretlcli) or a graphic-user interfacte (gretl_x11). It was originally derived from the program ESL ("Econometrics Software Library"), by Professor Ramu Ramanathan of the University of California, San Diego. It was initially released in January 2000 and is in very active development. Gretl has its own simple, intrepreted, scripting language, called hansl, yes "hasl and gretl"), which is a recursive acronym "Hanl's A Neat Scripting Language". There are a variety of extension to gretl, typicall written in hansl, known function packages.
+
+Documentation and source code is available on Sourceforge.
+
+`https://sourceforge.net/projects/gretl/`
+
+To install R on a local Linux machine either use a prefereed package manager (e.g., apt, yum, rpm) or download a source code version. As with other applications, source-code installations are necessary for development, are typically computationally faster, but may require additional work.
+
+```
+cd /usr/local/src/Gretl
+
+
+```
+
+A very small sample simple dataset that is used throughout this chapter is `auspop.txt`. Whilst it is part of the github repository that the latest version of this book is stored in, it is also replicated here. It is 
+
+It shows the population of Australia, including states and major territories, measured in thousands of people every ten years - a fairly simple table.
+
+```
+Year NSW Vic. Qld SA WA Tas. NT ACT Aust.
+1917 1904 1409 683 440 306 193 5 3 4941
+1927 2402 1727 873 565 392 211 4 8 6182
+1937 2693 1853 993 589 457 233 6 11 6836
+1947 2985 2055 1106 646 502 257 11 17 7579
+1957 3625 2656 1413 873 688 326 21 38 9640
+1967 4295 3274 1700 1110 879 375 62 103 11799
+1977 5002 3837 2130 1286 1204 415 104 214 14192
+1987 5617 4210 2675 1393 1496 449 158 265 16264
+1997 6274 4605 3401 1480 1798 474 187 310 18532
+2007 6927 5246 4228 1592 2131 496 218 341 21181 
+```
+
