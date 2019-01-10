@@ -1,4 +1,4 @@
-# Mathematical Applications and Programming: R, Octave, Maxima, and Gretl
+# Mathematical Applications and Programming: R, Octave, and Maxima
 
 by Lev Lafayette
 
@@ -12,7 +12,7 @@ Published by the Victorian Partnership for Advanced Computing (trading as V3 All
 
 Cover art composed by Michael D'Silva, featuring several clusters operated by the Victorian Partnership for Advanced Computing.
 
-"Mathematical Applications and Programming: R, Octave, Maxima, and gretl" is licensed under a Creative Commons Attribution 4.0 International License. 
+"Mathematical Applications and Programming: R, Octave, and Maxima" is licensed under a Creative Commons Attribution 4.0 International License. 
 
 All trademarks are property of their respective owners.
 
@@ -71,7 +71,7 @@ All trademarks are property of their respective owners.
 3.9 Matrices and Linear Equations
 3.10 Programming Maxima
 
-4.0 Econometrics with Gretl
+4.0 Gretl, Julia, and UNUMs
 
 
 # 0.0 Introduction
@@ -82,11 +82,11 @@ All trademarks are property of their respective owners.
 
 From a naive perspective, it is initially surprising to discover that there are multiple mathematical application and programming languages. "Surely", the reasoning goes, "all computation is a mathematical problem. Do we really need this multiplicity of languages?" Of course, when one comes to the realisation that there are multiple subfields of mathematics and the ways that these are structures and, in using their "quasi-empiricism" (to use the phrase perhaps first used by Imre Lakatos), they will have different ways of interacting with the actual computer system itself and with varying levels of efficiency and effectiveness. Thus, different mathematical programming languages. 
 
-In one sense, mathematical programming is an optimisation problem; the selection of the best solution from available solutions. This is certainly a major treatment of the well-known journal "Mathematical Programming". Whilst important, it is only indirectly referred to in this publication, except perhaps in analogy with the slight change in title: 'Mathematical Applications and Programming'. In providing an introduction to three major mathematical applications and programming languages that are available as free and open-source products - R, Octave, and Maxima - as the best solution for three different types of mathematical problems - statistics, numerical computation, and symbolic computation. In addition to this there are always new developments in the field and emergent technologies such as Julia and UNUMs are explored in the final chapter.
+In one sense, mathematical programming is an optimisation problem; the selection of the best solution from available solutions. This is certainly a major treatment of the well-known journal "Mathematical Programming". Whilst important, it is only indirectly referred to in this publication, except perhaps in analogy with the slight change in title: 'Mathematical Applications and Programming'. In providing an introduction to three major mathematical applications and programming languages that are available as free and open-source products - R, Octave, and Maxima - as the best solution for three different types of mathematical problems - statistics, numerical computation, and symbolic computation. In addition to this there are always new developments in the field and emergent technologies such as Gretl, Julia, and UNUMs are explored in the final chapter.
 
 Of course there are some similarities involved. Each of these applications and languages will have their own procedures for installation, on where to find online help. They each have their own way of handling different data types, managing variables and functions, and incorporating these into scripts and programs, as well as different ways of providing graphical visualisation. As far as broad categories are concerned, mathematical computation has at least some conceptual areas in common - and as it should be. After all, mathematics is neither just an art, a science, or a law, but as philosophy, it is the language of the universe. 
 
-"Philosophy is written in this grand book, which stands continually open before our eyes (I say the 'Universe'), but can not be understood without first learning to comprehend the language and know the characters as it is written. It is ?written in mathematical language, and its characters are triangles, circles and other geometric figures, without which it is impossible to humanly understand a word; without these one is wandering in a dark labyrinth."
+"Philosophy is written in this grand book, which stands continually open before our eyes (I say the 'Universe'), but can not be understood without first learning to comprehend the language and know the characters as it is written. It is written in mathematical language, and its characters are triangles, circles and other geometric figures, without which it is impossible to humanly understand a word; without these one is wandering in a dark labyrinth."
 
 Galileo Galilei, Il Saggiatore (1623)
 
